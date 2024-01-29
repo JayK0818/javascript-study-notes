@@ -9,10 +9,10 @@ at recurring intervals, or once after a specified interval.
 npm install --save @nestjs/schedule
 
 // app.module.ts
-import { } from '@nestjs/schedule'
+import { ScheduleModule } from '@nestjs/schedule'
 @Module({
   imports: [
-    Schedule.forRoot()
+    ScheduleModule.forRoot()
   ]
 })
 ```

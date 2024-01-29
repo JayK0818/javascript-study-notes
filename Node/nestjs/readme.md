@@ -705,6 +705,13 @@ export class MyLogger extends ConsoleLogger {
 }
 ```
 
+第三方日志方案: winston / pino
+
+1. 通用日志
+2. 警告日志 (warning)
+3. error 错误日志
+4. verbose 详细日志
+
 ## Model-View-Controller
 
 模版引擎
@@ -759,8 +766,3 @@ export class AppController {
   }
 }
 ```
-
-## SSE (Server-Sent Events)
-
-Server-Sent Events(SSE) is a server push technology enabling a client to receive automatic updates from a server via
-HTTP connection.
