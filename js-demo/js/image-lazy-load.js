@@ -28,9 +28,9 @@ createImageDomList(image_list)
 const lazyLoad = () => {
   const imageList = document.querySelectorAll('.image-item[data-src]')
   Array.from(imageList, (img) => {
-    const { top } = img.getBoundingClientRect()
+    const { top, bottom } = img.getBoundingClientRect()
     console.log(top, window.innerHeight)
-    if (top < window.innerHeight) {
+    if (top < window.innerHeight && bottom >= 0) {
       const url = img.getAttribute('data-src')
       // if (url) {
         img.setAttribute('src', url)

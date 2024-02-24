@@ -23,3 +23,7 @@ const throttle = (fn, delay = 200) => {
 drag_box.addEventListener('drag', throttle((e) => {
   console.log(e.clientX, e.clientY)
 }, 100))
+
+/**
+ * 节流: 当持续触发事件时, 一定时间内只触发一次处理函数
+*/

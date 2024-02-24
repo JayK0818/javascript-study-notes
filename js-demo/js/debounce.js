@@ -32,3 +32,7 @@ oInput.addEventListener('keyup', debounce(() => {
 oInput.addEventListener('keyup', () => {
   console.log('this:', this)
 }, false)
+
+/**
+ * 防抖: 持续触发事件的时候, 一定时间内没有再次触发, 事件处理函数才会执行一次
+*/

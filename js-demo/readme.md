@@ -6,3 +6,6 @@
    第一屏渲染出来的时间
 3. 白屏时间
    页面第一个元素出现的时间
+
+   动态 polyfill
+   [PerformanceAPI](https://developer.mozilla.org/zh-CN/docs/Web/API/Performance_API)
