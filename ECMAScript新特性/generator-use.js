@@ -1,4 +1,3 @@
-const path = require('path')
 const fs = require('fs')
 
 function readFile(url) {
@@ -13,8 +12,8 @@ function readFile(url) {
 function* generatorReadFile() {
   const f1 = yield readFile('./function.js')
   const f2 = yield readFile('./for-of.js')
-  console.log(f1.toString())
-  console.log(f2.toString())
+  console.log(f1)
+  console.log(f2)
 }
 
 const fileNext = generatorReadFile()
@@ -22,3 +21,10 @@ console.log(fileNext.next())
 console.log(fileNext.next())
 console.log(fileNext.next())
 
+// -------------- 使用async -------------
+async function readFileList() {
+  const f1 = await readFile('./function.js')
+  const f2 = await readFile('./for-of.js')
+  console.log(f1, f2)
+}
+readFileList()

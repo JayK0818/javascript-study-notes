@@ -89,6 +89,7 @@ console.log(Object.keys(symbol_object)) // []
 for(let key in symbol_object){
   console.log(key)  // 没有输出
 }
+console.log(Reflect.ownKeys(symbol_object)) // [ Symbol(e) ]
 
 //------------------------------------  Configurable 属性 ----------------------------------------
 // configurable 是否可被删除 以及除value和writable特性外的其他特性是否可被修改
@@ -142,7 +143,6 @@ console.log(arc.getArchive());
 
 // -------------------------防止改写config对象-------------------------
 function Vue(){
-
 }
 const config = {
   version:'1.2.3'
@@ -165,10 +165,10 @@ const singer = Object.defineProperty({}, 'age', {
     return age
   }
 })
-console.log('singer', singer)
-console.log(singer.age)
+console.log('singer', singer) // {}
+console.log(singer.age) // 20
 singer.age = 30
-console.log(singer.age)
+console.log(singer.age) // 20
 
 
 // -------------------- 传了setter, 没有传getter ----------------
@@ -177,7 +177,7 @@ const kyrie = Object.defineProperty({}, 'age', {
     age = newValue
   }
 })
-console.log('kyrie', kyrie)
+console.log('kyrie', kyrie) // {}
 kyrie.age = 50
 console.log(kyrie.age)  // undefined
 
@@ -197,7 +197,20 @@ const class_a = new MyClass()
 const class_b = new MyClass()
 console.log(class_a, class_b)
 class_a.x = 1
-console.log('class_b.x:', class_b.x)
+console.log('class_b.x:', class_b.x)  // 1
 
 console.log('-----------------------------------------------------------------')
 
+const salary = {}
+Object.defineProperty(salary, 'money', {
+  get(key) {
+    console.log('get salary')
+    return salary[key]
+  },
+  set(value) {
+    salary.money = value
+  }
+})
+
+salary.money = 10000 // 爆栈
+console.log('salary:', salary)
