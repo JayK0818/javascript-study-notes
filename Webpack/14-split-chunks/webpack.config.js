@@ -25,6 +25,7 @@ const { resolve } = require('path')
   ]
 } */
 
+// require.ensure([./module.ts])
 // ------------------- 单入口 -----------------
 module.exports = {
   mode: 'development',

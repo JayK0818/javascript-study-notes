@@ -10,6 +10,7 @@ const inject_app = createApp({
     const counter = ref(0)
     setInterval(() => {
       counter.value += 1
+      message.value += 'aaa'
     }, 1000)
     return {
       message,
@@ -34,7 +35,8 @@ inject_app.component('child-component', {
     }
   },
   created() {
-    console.log(this.localMessage, this.count, this.counter)
+    // count 是一个变量, counter是一个响应式变量
+    console.log('------------------', this.localMessage, this.count, this.counter)
   },
   data() {
     return {

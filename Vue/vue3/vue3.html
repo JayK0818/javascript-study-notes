@@ -58,6 +58,11 @@
   <div id="watch-effect-app">
     <button @click="increment">{{count}}</button>
   </div>
+  <hr>
+  <div id="inject-app">
+    <button @click="increment">inject {{count}}</button>
+    <child-button></child-button>
+  </div>
   <script src="../src/vue.development-3.js"></script>
   <script>
     const {

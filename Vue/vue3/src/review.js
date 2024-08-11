@@ -183,3 +183,34 @@ const watch_effect_app = createApp({
 console.log(watch_effect_app)
 const instance = watch_effect_app.mount('#watch-effect-app')
 console.log(instance)
+
+// ----------------- inject-app ----------------------
+const inject_app = createApp({
+  setup() {
+    const count = ref(0)
+    const increment = () => {
+      count.value += 1
+    }
+    provide('count', count)
+    // provide('message')
+    return {
+      count,
+      increment
+    }
+  }
+})
+inject_app.component('child-button', {
+  template: `<button>hello inject -- {{inject_count}} -- {{inject_message}}</button>`,
+  setup() {
+    const inject_count = inject('count')
+    const inject_message = inject('message', 'hello world')
+    console.log(inject_message, inject_count)
+    // inject_count为一个ref变量, inject_message为一个字符串
+    return {
+      inject_count,
+      inject_message
+    }
+  }
+})
+
+inject_app.mount('#inject-app')
