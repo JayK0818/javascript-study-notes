@@ -104,3 +104,28 @@ function baz() {
   foo()
   // 分别输出 2 2
 })();
+
+
+/**
+ * 1. 变量对象
+ * 2. 作用域链
+ * 3. this
+ * 
+ * 全局上下文（VO） / 函数上下文 (AO activiation object)
+ * 
+ * 1. 进入执行上下文
+ * VO： 函数定义, 声明， 变量声明 函数的形参
+*/
+(function () {
+  function foo() {
+    console.log(a) // a is not defined
+    a = 1
+  }
+  foo()
+
+  function bar() {
+    a = 1
+    console.log(a)  // 1
+  }
+  bar()
+})()
