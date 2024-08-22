@@ -37,6 +37,9 @@ class MyPromise {
     }
     this.result = value
     this.status = 'fulfilled'
+    while (this.fulfilled_cbs.length) {
+      this.fulfilled_cbs.shift()(this.result)
+    }
   }
   reject(reason) {
     if (this.status !== 'pending') {
@@ -44,11 +47,13 @@ class MyPromise {
     }
     this.result = reason
     this.status = 'rejected'
+    while (this.rejected_cbs.length) {
+      this.rejected_cbs.shift()(this.reason)
+    }
   }
   then(onFulfilled, onRejected) {
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : (val) => val;
     onRejected = typeof onRejected === 'function' ? onRejected : (reason) => reason;
-    console.log('then中的this:', this)
     if (this.status === 'fulfilled') {
       onFulfilled(this.result)
     }
@@ -56,8 +61,28 @@ class MyPromise {
       onRejected(this.result)
     }
     if (this.status === 'pending') {
-      console.log('有异步操作')
+      this.fulfilled_cbs.push(onFulfilled.bind(this))
+      this.rejected_cbs.push(onRejected.bind(this))
     }
+    const then_promise = new MyPromise((resolve, reject) => {
+      const resolvePromise = (cb) => {
+        const res = cb(this.result)
+        if (res instanceof MyPromise) {
+          res.then(resolve, reject)
+        } else {
+          resolve(res)
+        }
+      }
+      if (this.status === 'fulfilled') {
+        resolvePromise(onFulfilled)
+      } else if (this.status === 'rejected') {
+        resolvePromise(onRejected)
+      } else {
+        this.fulfilled_cbs.push(onFulfilled.bind(this))
+        this.rejected_cbs.push(onRejected.bind(this))
+      }
+    })
+    return then_promise
   }
 }
 
@@ -107,14 +132,20 @@ class MyPromise {
 // --------------- 包含异步操作 --------------
 (function () {
   const p1 = new MyPromise(resolve => {
-    setTimeout(() => {
+/*     setTimeout(() => {
       console.log('hello setTimeout')
-    }, 2000)
+      resolve('hello setTimeout!!!!')
+    }, 2000) */
+    resolve(100)
   }).then(res => {
-    console.log('res是什么:', res)
+    return res * 2
   })
-  console.log(p1)
+    .then(res => {
+    console.log('第二个then', res)
+  })
 })();
+
+// TODO?: promise的链式调用
 
 // ---------------- class中的this ---------------
 /* (function () {
