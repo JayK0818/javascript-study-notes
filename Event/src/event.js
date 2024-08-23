@@ -73,6 +73,7 @@ let passiveSupported = false
 try {
   const options = Object.defineProperty({}, 'passive', {
     get() {
+      console.log('读取了吗？')
       passiveSupported = true
     }
   })

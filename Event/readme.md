@@ -1,7 +1,7 @@
 # UIEvent
-    
+
     UIEvent接口表示简单的用户界面事件.UIEvent是从Event派生出来的。某些接口是这个的直接或间接后代:
-        MouseEvent TouchEvent FocusEvent KeyboardEvent WheelEvent InputEvent CompositionEvent
+    MouseEvent TouchEvent FocusEvent KeyboardEvent WheelEvent InputEvent CompositionEvent
 
 # 1. contextmenu
 
@@ -50,7 +50,14 @@
 
 # 2. 事件监听
 
+    DOM事件
     EventTarget.addEventListener()
+
+    W3C定义了DOM标准
+
+    DOM2级事件
+    addEventListener()
+    removeEventListener()
 
     1. 它允许给一个事件注册多个监听器。 特别是在使用AJAX库，JavaScript模块，或其他需要第三方库/插件的代码。
     2. 它提供了一种更精细的手段控制 listener 的触发阶段。（即可以选择捕获或者冒泡）。
@@ -60,3 +67,33 @@
 
     element.attachEvent(event,function);
     element.detachEvent(event,function);
+
+```js
+let supportPassive = false
+try {
+    const options = {
+        get passive () {
+            supportPassive = true
+        }
+    }
+    window.addEventListener('click', null, options)
+    window.removeEventListener('click', null, options)
+} catch () {
+    supportPassive = false
+}
+```
+
+## 事件流
+
+1. 事件捕获
+2. 处于target
+3. 事件冒泡
+
+## event.stopImmediatePropagation
+
+    Event接口的 *stopImmediatePropagation* 方法阻止监听同一事件的其他事件监听器被调用。
+
+## ajax
+
+    XMLHttpRequest
+    onreadystatechange
