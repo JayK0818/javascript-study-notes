@@ -26,7 +26,7 @@
     const BindFn = function () {
       console.log('----arguments-----', arguments)
       const new_args = [...args, ...arguments]
-      fn.call(this, ...new_args)
+      fn.call(this, ...new_args) // 继承构造函数内部的属性
       const res = fn.call(fn instanceof BindFn ? fn : context, ...new_args)
       return res
     }
@@ -37,17 +37,17 @@
   const obj = {
     firstName: 'kyrie'
   }
-  function fn(lastName, age, team) {
+  function player(lastName, age, team) {
     this.name = 'fn'
     this.team = team
     return this.firstName + '-' + lastName + age
   }
-  fn.prototype.message = 'hello, 我是原型上的message'
+  player.prototype.message = 'hello, 我是原型上的message'
 /*   const bindFn = fn.my_bind(obj, 'irving')
   console.log('my-bind-fn', bindFn(32)) // kyrie-irving32 */
 
   // 通过new调用
-  const bindFn = fn.my_bind(obj, 'irving')
+  const bindFn = player.my_bind(obj, 'irving')
   const object = new bindFn(300, '小牛')
   console.log(object.team, object.name, object.message, JSON.stringify(object))
   /**

@@ -1,12 +1,73 @@
-# Installing yo and some generators
+# 模块化
+
+  复杂程序 -- 拆分成不同具有原子功能的模块
+  单一模块内部的方法 应该是私有的, 向外部提供定义好的方法以及属性等
+
+1.  全局模式
+
 ```js
+// 全局污染
+window.fn1 = function() {
+}
+window.fn2 = function () {
+}
+```
+2. namespace
+
+```js
+const module_a = {
+  message: 'hello world'
+}
+// 缺点: 外部可以修改内部属性
+module_a.message = '你好 世界'
+```
+
+3. IIFE
+
+```js
+(function () {
+  const a = 'hello world'
+  function fn () {
+    return a
+  }
+})();
+
+// IIFE增强模式
+(function () {
+  // ...
+})(window, lodash, Jquery)
+
+// 不同模块引入顺序不能颠倒
+```
+4. CommonJS
+
+  模块同步加载执行
+  4.1 代码都是在模块内部执行
+  4.2 模块如果加载多次, 只在第一次加载的时候执行
+  4.3 同步加载
+
+5. browserify
+
+**require('modules')** in the browser
+Use a node-style *require()* to organize your browser code
+
+[Browserify](https://www.npmmirror.com/package/browserify)
+
+6. amd/cmd
+  async module definition
+
+# Installing yo and some generators
+
+```shell
 npm install -g yo
 ```
   Generators are npm packages named generator-XYZ.
   for example To install the webapp generator:
-```js
+
+```shell
 npm install -g generator-webapp
 ```
+
   We will use generator-webapp in our examples below ,Replace webapp with the name of your generator
   for the same result.
 ```js
@@ -17,7 +78,7 @@ yo webapp
 npm home generator-webapp
 ```
   Yo else provide the following commands:
-```js
+```shell
 yo --help // access the full help screen
 yo --generators // list every installed generators
 yo --version  // get the version

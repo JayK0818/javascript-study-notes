@@ -30,18 +30,18 @@ document.querySelector('.link').addEventListener('click', function(event) {
 const immediate_button = document.querySelector('.immediate_button')
 immediate_button.addEventListener('click', function() {
   console.log('hello 1')
-})
+}, true)
 immediate_button.addEventListener('click', function(event) {
   console.log('hello 2')
-  // event.stopImmediatePropagation()
+  // event.stopImmediatePropagation() // 只执行到 输出hello 2, 其他绑定的函数均不执行
   event.stopPropagation()
-})
+}, true)
 immediate_button.addEventListener('click', function() {
   console.log('hello 3')
-})
+}, true)
 immediate_button.addEventListener('click', function() {
   console.log('hello 4')
-})
+}, true)
 
 // --------- 生成uuid ----------
 const array = []
@@ -152,4 +152,18 @@ event_emitter.emit('cat', {
 })
 event_emitter.emit('cat', {
   name: '生活'
-})
+});
+
+// ------------------ 事件捕获 ----------------
+(function () {
+  const parent = document.querySelector('.container-1')
+  const child = document.querySelector('.container-2')
+
+  parent.addEventListener('click', (e) => {
+    console.log('parent')
+    // e.stopImmediatePropagation() // 阻止事件继续向下传递
+  }, true)
+  child.addEventListener('click', () => {
+    console.log('child')
+  }, true)
+})()
