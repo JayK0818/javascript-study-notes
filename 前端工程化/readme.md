@@ -45,6 +45,7 @@ module_a.message = '你好 世界'
   4.1 代码都是在模块内部执行
   4.2 模块如果加载多次, 只在第一次加载的时候执行
   4.3 同步加载
+  4.4 输出值的复制
 
 5. browserify
 
@@ -53,8 +54,33 @@ Use a node-style *require()* to organize your browser code
 
 [Browserify](https://www.npmmirror.com/package/browserify)
 
-6. amd/cmd
+6. AMD/CMD
   async module definition
+  AMD: 依赖前置
+  CMD: 就近依赖
+
+  commonjs + AMD
+
+7. ESM
+
+  Commonjs 输出值的复制, ESM输出值的引用
+  Commonjs 是运行时加载, ESM是编译时输出
+
+8. UMD
+
+  universal module definition
+  所有格式打包
+```js
+(function () {
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    console.log('commonjs')
+  } else if (typeof define === 'function' && define.amd) {
+    // amd (require.js)
+  } else {
+    // ...
+  }
+})()
+```
 
 # Installing yo and some generators
 

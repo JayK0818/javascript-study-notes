@@ -167,7 +167,7 @@ function Point(x,y){
 Point.prototype.toString = function(){
     console.log(this.x + this.y);
 }
-let p = new Point(1,2);
+const p = new Point(1,2);
 p.toString();   // 3
 ```
 
@@ -183,7 +183,7 @@ class Point{
 	}
 }
 // 可以new class声明的类,和ES5的构造函数使用方法一致. 构造函数的prototype属性,在ES6的'类'上继续存在.
-let p = new Point();
+const p = new Point();
 p.toString();
 ```
     tips:

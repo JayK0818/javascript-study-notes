@@ -133,4 +133,59 @@ console.log('\u0061', '\u0063', '\u0089')
 
 console.log('a'.charCodeAt(0))  // 97
 console.log(encodeURI(' '))
-console.log(encodeURIComponent(' '))
+console.log(encodeURIComponent(' '));
+
+
+  // ---------- 函数调用使用 `` 模版字符串 ---------------
+(function () {
+  function upperCase(strings, ...values) {
+    console.log(strings, values)
+    // strings: ['my name is', '']
+    // values ['jack']
+    let result = ''
+    strings.forEach((str, i) => {
+      if (i > 0) {
+        result += values[i - 1].toUpperCase()
+      }
+      result += str
+    })
+    return result
+  }
+  const name = 'jack'
+  const str = upperCase`my name is ${name}`;
+  console.log('uppercase-str:', str);
+  
+  const firstName = 'kyrie'
+  const lastName = 'irving'
+  const fullName = upperCase`my firstName is ${firstName}, my lastName is ${lastName}`;
+  console.log(fullName)
+})();
+
+// ------- style-in-js ------------
+(function () {
+  const style = (values, ...props) => {
+    console.log(values, props)
+    // [ 'color:pin; font-size: 13px;' ]
+    // [ 'color:pin; font-size: 13px; height: ', 'px' ] [ 20 ]
+
+/*     let style_str = ''
+    values.forEach((str, i) => {
+      style_str += str
+      if (props[i]) {
+        style_str += props[i]
+      }
+    })
+    return style_str */
+    let result = ''
+    values.forEach((str, i) => {
+      if (i > 0) {
+        result += props[i - 1]
+      }
+      result += str
+    })
+    return result
+  }
+  const height = 20;
+  const s = style`color:pink; font-size: 13px; height: ${height}px; width: ${height}px;`;
+  console.log('style-string:', s)
+})();

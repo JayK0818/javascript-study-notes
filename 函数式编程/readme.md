@@ -35,10 +35,10 @@ function loop(x) {
 // 立即调用函数表达式
 (function foo() {
   console.log('hello world')
-})()
+})();
 (function foo(){
   console.log('hello world')
-}())
+}());
 ```
 ## 高阶函数
 
