@@ -10,18 +10,21 @@ const api_app = createApp({
       required: true
     }
   },
-  setup (props) {
+  setup(props) {
+    console.log('api-props:', props.count, props.player)
+    // 1 kyrie
     provide('player', props.player)
     provide('count', props.count)
     const parent_count = ref(0)
-    setInterval(() => {
+/*     setInterval(() => {
       parent_count.value += 1
-    }, 2000)
+    }, 2000) */
     const counter_button = ref(null)
     const handle_click = () => {
       nextTick(() => {
         counter_button.value.increment()
       })
+      parent_count.value += 1
     }
     return {
       parent_count,
@@ -39,7 +42,7 @@ api_app.provide(symbol_key, '你好生活')
 
 api_app.component('provide-inject-component', {
   template: `<div>
-    <button>{{count}}</button>
+    <button>来自父级的count: {{count}}</button>
     <div>{{player}}</div>
     <div>{{message}}</div>
   </div>`,
@@ -47,6 +50,7 @@ api_app.component('provide-inject-component', {
     const count = inject('count')
     const player = inject('player')
     const message = inject(symbol_key)
+    console.log('inject-count:', count) // 1, 来自根组件接受的props 注入
     return {
       count,
       player,
@@ -132,6 +136,7 @@ api_app.component('setup-child-component', {
     const increment = () => {
       count.value += 1
     }
+    console.log('toRefs:', _count, 'toRef:', inherit_count)
     return {
       count,
       parent_count: _count,

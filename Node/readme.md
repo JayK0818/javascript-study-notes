@@ -22,9 +22,16 @@
 
 使用 git 下载:
 
-```js
+```shell
 cd ~/ git clone https://github.com/nvm-sh/nvm.git .nvm
 . ./nvm.sh
+```
+
+```json
+{
+   "private": "true",  // 私有包
+   "preinstall": "npx only-allow pnpm"
+}
 ```
 
 [nvm 下载](https://github.com/nvm-sh/nvm)

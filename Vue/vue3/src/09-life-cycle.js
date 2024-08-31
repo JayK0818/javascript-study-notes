@@ -9,6 +9,7 @@ const lifeCycleApp = createApp({
       this.count += 1
     }
   },
+  // 先执行setup中的 每个钩子函数
   setup () {
     console.log('setup invoked')
     onBeforeMount(() => {

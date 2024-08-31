@@ -86,6 +86,19 @@ type TupleToNumber = ElementOf<IDs>    // number
 type Foo<T> = T extends { a: infer U, b: infer U } ? U : never;
 type T5 = Foo<{a: string; b: number}>
 
+// ------------------- 函数参数使用 infer 推断 -------------------
+/**
+ * 1. 首先使用infer
+ * 2. 使用extends 约束
+ * 3. 三目运算符
+ * 
+*/
+type TestFunctionParams<F> = F extends (name: infer P) => void ? P : never
+function sum(a: number[]): number {
+  return a.reduce((p, n) => p + n, 0)
+}
+type FunctionSumParamType = TestFunctionParams<typeof sum>
+
 
 export {
 

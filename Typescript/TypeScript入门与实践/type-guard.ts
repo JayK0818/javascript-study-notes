@@ -78,6 +78,15 @@ const n = (x: TypeA | TypeB) => {
     console.log(x)
   }
 }
+type buttonSize = 'small' | 'middle' | 'large' | number
+
+const isNumberSize = (size: buttonSize): size is number => {
+  return typeof size === 'number'
+}
+const isStringSize = (size: buttonSize): size is Exclude<buttonSize, 'number'> => {
+  return typeof size === 'string'
+}
+
 
 // ------------- 可辨识联合类型 ---------------
 interface Square {

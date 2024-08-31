@@ -1,1 +1,0 @@
-declare const get_sum = (a: number, b: number) => number
