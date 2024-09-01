@@ -563,6 +563,7 @@
   </div>
   <hr>
   <div id="store-app">
+    <div>store-component</div>
     <button @click="click">click</button>
     <component-a></component-a>
     <component-b></component-b>
@@ -601,14 +602,152 @@
   <div id="trigger-app">
     <button @click="handle_click">trigger button {{count}}</button>
   </div>
+  <hr>
+  <div id="pinia-app">
+    <button @click="handle_click">pinia-store-count-{{count}} -{{ double_count }}</button>
+    <div>
+      <span>{{ user }}</span>
+      <button @click="handle_reverse_user">reverse user</button>
+    </div>
+  </div>
   <script src="../src/vue.development-3.js"></script>
+  <script>
+    var _VueDemiGlobal = typeof globalThis !== 'undefined'
+        ? globalThis
+        : typeof global !== 'undefined'
+          ? global
+          : typeof self !== 'undefined'
+            ? self
+            : this
+      var VueDemi = (function (VueDemi, Vue, VueCompositionAPI) {
+        if (VueDemi.install) {
+          return VueDemi
+        }
+        if (!Vue) {
+          console.error('[vue-demi] no Vue instance found, please be sure to import `vue` before `vue-demi`.')
+          return VueDemi
+        }
+
+        // Vue 2.7
+        if (Vue.version.slice(0, 4) === '2.7.') {
+          for (var key in Vue) {
+            VueDemi[key] = Vue[key]
+          }
+          VueDemi.isVue2 = true
+          VueDemi.isVue3 = false
+          VueDemi.install = function () { }
+          VueDemi.Vue = Vue
+          VueDemi.Vue2 = Vue
+          VueDemi.version = Vue.version
+          VueDemi.warn = Vue.util.warn
+          VueDemi.hasInjectionContext = function () {
+            return !!VueDemi.getCurrentInstance()
+          }
+          function createApp(rootComponent, rootProps) {
+            var vm
+            var provide = {}
+            var app = {
+              config: Vue.config,
+              use: Vue.use.bind(Vue),
+              mixin: Vue.mixin.bind(Vue),
+              component: Vue.component.bind(Vue),
+              provide: function (key, value) {
+                provide[key] = value
+                return this
+              },
+              directive: function (name, dir) {
+                if (dir) {
+                  Vue.directive(name, dir)
+                  return app
+                } else {
+                  return Vue.directive(name)
+                }
+              },
+              mount: function (el, hydrating) {
+                if (!vm) {
+                  vm = new Vue(Object.assign({ propsData: rootProps }, rootComponent, { provide: Object.assign(provide, rootComponent.provide) }))
+                  vm.$mount(el, hydrating)
+                  return vm
+                } else {
+                  return vm
+                }
+              },
+              unmount: function () {
+                if (vm) {
+                  vm.$destroy()
+                  vm = undefined
+                }
+              },
+            }
+            return app
+          }
+          VueDemi.createApp = createApp
+        }
+        // Vue 2.6.x
+        else if (Vue.version.slice(0, 2) === '2.') {
+          if (VueCompositionAPI) {
+            for (var key in VueCompositionAPI) {
+              VueDemi[key] = VueCompositionAPI[key]
+            }
+            VueDemi.isVue2 = true
+            VueDemi.isVue3 = false
+            VueDemi.install = function () { }
+            VueDemi.Vue = Vue
+            VueDemi.Vue2 = Vue
+            VueDemi.version = Vue.version
+            VueDemi.hasInjectionContext = function () {
+              return !!VueDemi.getCurrentInstance()
+            }
+          } else {
+            console.error('[vue-demi] no VueCompositionAPI instance found, please be sure to import `@vue/composition-api` before `vue-demi`.')
+          }
+        }
+        // Vue 3
+        else if (Vue.version.slice(0, 2) === '3.') {
+          for (var key in Vue) {
+            VueDemi[key] = Vue[key]
+          }
+          VueDemi.isVue2 = false
+          VueDemi.isVue3 = true
+          VueDemi.install = function () { }
+          VueDemi.Vue = Vue
+          VueDemi.Vue2 = undefined
+          VueDemi.version = Vue.version
+          VueDemi.set = function (target, key, val) {
+            if (Array.isArray(target)) {
+              target.length = Math.max(target.length, key)
+              target.splice(key, 1, val)
+              return val
+            }
+            target[key] = val
+            return val
+          }
+          VueDemi.del = function (target, key) {
+            if (Array.isArray(target)) {
+              target.splice(key, 1)
+              return
+            }
+            delete target[key]
+          }
+        } else {
+          console.error('[vue-demi] Vue version ' + Vue.version + ' is unsupported.')
+        }
+        return VueDemi
+      })(
+        (_VueDemiGlobal.VueDemi = _VueDemiGlobal.VueDemi || (typeof VueDemi !== 'undefined' ? VueDemi : {})),
+        _VueDemiGlobal.Vue || (typeof Vue !== 'undefined' ? Vue : undefined),
+        _VueDemiGlobal.VueCompositionAPI || (typeof VueCompositionAPI !== 'undefined' ? VueCompositionAPI : undefined)
+      );
+
+  </script>
   <script>
     const {
       createApp, watchEffect, shallowRef, provide, inject, toRefs, h, toRef, ref, onUnmounted, reactive,
       computed, watch, nextTick, onMounted, onBeforeMount, onBeforeUpdate, onUpdated, onBeforeUnmount,
-      onRenderTracked, onRenderTriggered, getCurrentInstance
+      onRenderTracked, onRenderTriggered, getCurrentInstance, defineComponent
     } = Vue
   </script>
+  <script src="../src/pinia.js"></script>
   <script src="./src/01-first-app.js"></script>
   <script src="./src/02-mustache.js"></script>
   <script src="./src/03-computed.js"></script>
@@ -637,5 +776,6 @@
   <script src="./src/26-setup-api.js"></script>
   <script src="./src/27-shallowRef.js"></script>
   <script src="./src/28-trigger.js"></script>
+  <script src="./src/29-pinia.js"></script>
 </body>
 </html>

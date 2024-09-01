@@ -10,9 +10,9 @@ const refApp = createApp({
         input.value.focus()
       }
       console.log('items-array', items.value)
-      nextTick(() => {
+/*       nextTick(() => {
         console.log('ref-component', child.value)
-      })
+      }) */
     })
     const getItem = (item) => {
       if (item) {
@@ -69,4 +69,4 @@ refApp.component('child-component', {
   }
 })
 
-refApp.mount('#ref-app')
+// refApp.mount('#ref-app')
