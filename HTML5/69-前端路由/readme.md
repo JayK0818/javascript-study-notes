@@ -77,7 +77,7 @@ history.pushState(startObj,"page 2","bar.html");
     可以通过history.state属性获取 得到如果popstate被触发时能得到的状态对象。
 ```js
 window.addEventListener('load',function() {
-  let currentState = history.state;
+  const currentState = history.state;
 })
 ```	
 	
