@@ -622,6 +622,23 @@
     <router-link to="/user">user</router-link>
     <router-view></router-view>
   </div>
+  <hr/>
+  <div id="dynamic-param-router-app">
+    <div>动态路由</div>
+    <div
+      v-for="player in player_list"
+      :key="player.id"
+      @click="handle_jump(player)"
+    >{{player.firstName}} - {{player.lastName}}</div>
+    <router-view></router-view>
+  </div>
+  <hr/>
+  <div id="router-guard-app">
+    <div>路由守卫</div>
+    <router-link to="/">首页</router-link>
+    <router-link to="/about">关于</router-link>
+    <router-view></router-view>
+  </div>
   <script src="../src/vue.development-3.js"></script>
   <script src="../src/vue-router-4.js"></script>
   <script>
@@ -759,7 +776,7 @@
       computed, watch, nextTick, onMounted, onBeforeMount, onBeforeUpdate, onUpdated, onBeforeUnmount,
       onRenderTracked, onRenderTriggered, getCurrentInstance, defineComponent, effectScope, getCurrentScope
     } = Vue
-    const { createRouter, createWebHistory } = window.VueRouter
+    const { createRouter, createWebHistory, useRouter, useRoute, onBeforeRouteUpdate } = window.VueRouter
   </script>
   <script src="../src/pinia.js"></script>
   <script src="./src/01-first-app.js"></script>
