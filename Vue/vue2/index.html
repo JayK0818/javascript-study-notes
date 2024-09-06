@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="global-mixin-app"></div>
+  <hr>
+  <div id="provide-inject-app">
+    <div>provide-inject</div>
+    <button @click="handle_click">click me {{count}} times</button>
+    <child></child>
+    <button @click="handle_age_increment">age increment</button>
+  </div>
+  <hr>
+  <div id="directive-app">
+    <div>directive</div>
+    <input type="text" v-focus>
+    <button @click.stop="handle_click">{{ count }}</button>
+    <div
+      style="width: 100px; height: 100px;"
+      v-change_color
+    ></div>
+  </div>
+  <script src="../src/vue.development-2.js"></script>
+  <script src="./src/global-mixin.js"></script>
+  <script src="./src/provide-inject.js"></script>
+  <script src="./src/directive.js"></script>
+</body>
+</html>

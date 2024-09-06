@@ -192,6 +192,24 @@ function normalizeProps (options: Object, vm: ?Component) {
       }
     }
   } else if (isPlainObject(props)) {
+    // 如果传递的props是一个对象
+    /**
+     * {
+     *    title: String,
+          isPublished: Boolean,
+     * }
+     {
+        title: {
+          type: String,
+          required: true
+        },
+        isPublished: {
+          type: Boolean,
+          required: true
+        }
+     }
+     * 
+    */
     for (const key in props) {
       val = props[key]
       name = camelize(key)
@@ -203,6 +221,73 @@ function normalizeProps (options: Object, vm: ?Component) {
   options.props = res
 }
 
+/**
+ * 处理provide-inject, 转换成基于对象的形式
+*/
+function normalizeInject (options: Object, vm: ?Component) {
+  const inject = options.inject
+  if (!inject) return
+  // 将接受到的inject重置为一个空对象
+  const normalized = options.inject = {}
+  if (Array.isArray(inject)) {
+    // 如果是一个数组, 例如：   inject: ['foo'] 
+    for (let i = 0; i < inject.length; i++) {
+      /**
+       * {
+       *   foo: {
+       *    from: 'foo' 
+       *   }
+       * }
+      */
+      normalized[inject[i]] = { from: inject[i] }
+    }
+  } else if (isPlainObject(inject)) {
+    // 如果是一个对象
+    /**
+   *     foo: {
+          from: 'bar',
+          default: () => [1, 2, 3]
+        }
+        foo: {
+          from: 'bar',
+          default: 'foo'
+        }
+     * 
+    */
+    for (const key in inject) {
+      const val = inject[key]
+      normalized[key] = isPlainObject(val)
+        ? extend({ from: key }, val) // 如果没有设置来源, 则使用当前的字段名作为 from, 否则直接覆盖from
+        : { from: val }
+    }
+  }
+}
+
+// 处理指令
+/**
+ * directives: {
+ *  focus: { // 第一种使用方式
+ *    bind (el, binding, vnode) {},
+ *    update (el, binding, vnode) {}
+ *  },
+  * change_color (el) { 第二种使用方式
+      el.style.backgroundColor = 'skyblue';
+    }
+ * }
+ * 
+*/
+function normalizeDirectives (options: Object) {
+  const dirs = options.directives
+  if (dirs) {
+    for (const key in dirs) {
+      const def = dirs[key]
+      if (typeof def === 'function') {
+        // 将函数式转换为一个对象的形式, 绑定和更新时的行为一致
+        dirs[key] = { bind: def, update: def }
+      }
+    }
+  }
+}
 
 // 合并options (mixin 中合并props)
 function mergeOptions (
