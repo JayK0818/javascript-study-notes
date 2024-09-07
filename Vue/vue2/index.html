@@ -8,6 +8,13 @@
 </head>
 <body>
   <div id="global-mixin-app"></div>
+  <hr/>
+  <div id="mixin-app">
+    <div>{{ message }}</div>
+    <div>{{ msg }}</div>
+    <button>{{ count }}</button>
+    <Player></Player>
+  </div>
   <hr>
   <div id="provide-inject-app">
     <div>provide-inject</div>
@@ -25,9 +32,13 @@
       v-change_color
     ></div>
   </div>
+  <hr/>
+  <div id="extend-app">
+  </div>
   <script src="../src/vue.development-2.js"></script>
-  <script src="./src/global-mixin.js"></script>
+  <script src="./src/mixins.js"></script>
   <script src="./src/provide-inject.js"></script>
   <script src="./src/directive.js"></script>
+  <script src="./src/extend.js"></script>
 </body>
 </html>

@@ -81,9 +81,26 @@ function once(fn) {
 
 // 处理驼峰写法, 将 is-published 转换为 isPublished
 const camelizeRE = /-(\w)/g // \w匹配任何字母 数字 下划线
-export const camelize = cached((str: string): string => {
+export const camelize = cached((str) => {
   return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
 })
+
+// 校验是否为内置的函数
+function isNative (Ctor: any) {
+  return typeof Ctor === 'function' && /native code/.test(Ctor.toString())
+}
+
+// 是否支持symbol
+const hasSymbol =
+  typeof Symbol !== 'undefined' && isNative(Symbol) &&
+  typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys)
+
+// 判断某个属性是否存在于指定的对象上
+const hasOwnProperty = Object.prototype.hasOwnProperty
+function hasOwn (obj, key) {
+  return hasOwnProperty.call(obj, key)
+}
+
 ```
 [String.prototype.replace](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace)
 
@@ -128,6 +145,39 @@ unction initGlobalAPI (Vue) {
   initMixin(Vue)
   initExtend(Vue)
   initAssetRegisters(Vue)
+}
+```
+
+## initAssetRegisters
+
+```js
+// 注册全局的 component/filter/directive 静态方法
+const ASSET_TYPES = [
+  'component',
+  'directive',
+  'filter'
+]
+function initAssetRegisters (Vue: GlobalAPI) {
+  ASSET_TYPES.forEach(type => {
+    Vue[type] = function (
+      id: string, // 全局组件, 指令和管道的名称
+      definition: Function | Object
+    ): Function | Object | void {
+      if (!definition) {
+        return this.options[type + 's'][id] // 在此之前已经在options各定义了一个空对象, 如果此前注册过相同组件或者指定等, 返回之前已经定义过的,(防止重复定义) 否则就是undefined
+      } else {
+        if (type === 'component' && isPlainObject(definition)) {
+          definition.name = definition.name || id
+          definition = this.options._base.extend(definition)
+        }
+        if (type === 'directive' && typeof definition === 'function') {
+          definition = { bind: definition, update: definition }
+        }
+        this.options[type + 's'][id] = definition
+        return definition
+      }
+    }
+  })
 }
 ```
 
@@ -289,6 +339,59 @@ function normalizeDirectives (options: Object) {
   }
 }
 
+// 递归合并mixin的data中的数据
+function mergeData (to: Object, from: ?Object): Object {
+  if (!from) return to
+  let key, toVal, fromVal
+  const keys = hasSymbol
+    ? Reflect.ownKeys(from)
+    : Object.keys(from) // 获取某个对象上的属性列表
+  for (let i = 0; i < keys.length; i++) {
+    key = keys[i]
+    // in case the object is already observed...
+    if (key === '__ob__') continue
+    toVal = to[key]
+    fromVal = from[key]
+    if (!hasOwn(to, key)) { // 没有的属性才设置到对象上
+      set(to, key, fromVal)
+    } else if (
+      // 如果值是一个对象并且 不是同一个对象 再深度遍历合并
+      toVal !== fromVal &&
+      isPlainObject(toVal) &&
+      isPlainObject(fromVal)
+    ) {
+      mergeData(toVal, fromVal)
+    }
+  }
+  return to
+}
+
+// 合并mixin中的hoo, 转换为一个数组
+function mergeHook (
+  parentVal: ?Array<Function>,
+  childVal: ?Function | ?Array<Function>
+): ?Array<Function> {
+  const res = childVal
+    ? parentVal
+      ? parentVal.concat(childVal)
+      : Array.isArray(childVal)
+        ? childVal
+        : [childVal]
+    : parentVal
+  return res
+    ? dedupeHooks(res)
+    : res
+}
+function dedupeHooks (hooks) { // 过滤掉重复的生命周期函数
+  const res = []
+  for (let i = 0; i < hooks.length; i++) {
+    if (res.indexOf(hooks[i]) === -1) {
+      res.push(hooks[i])
+    }
+  }
+  return res
+}
+
 // 合并options (mixin 中合并props)
 function mergeOptions (
   parent: Object,
@@ -303,6 +406,7 @@ function mergeOptions (
       parent = mergeOptions(parent, child.extends, vm)
     }
     if (child.mixins) {
+      // 遍历字组件选项中的mixins对象, 合并到当前组件选项
       for (let i = 0, l = child.mixins.length; i < l; i++) {
         parent = mergeOptions(parent, child.mixins[i], vm)
       }
@@ -323,5 +427,61 @@ function mergeOptions (
     options[key] = strat(parent[key], child[key], vm, key)
   }
   return options
+}
+```
+
+## initExtend
+
+```js
+export function initExtend (Vue: GlobalAPI) {
+  Vue.cid = 0
+  let cid = 1
+  Vue.extend = function (extendOptions: Object): Function {
+    extendOptions = extendOptions || {}
+    const Super = this
+    const SuperId = Super.cid
+    const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
+    if (cachedCtors[SuperId]) {
+      return cachedCtors[SuperId]
+    }
+    const Sub = function VueComponent (options) {
+      this._init(options)
+    }
+    // 构造函数的原型 指向父类构造函数的原型
+    Sub.prototype = Object.create(Super.prototype)
+    Sub.prototype.constructor = Sub
+    Sub.cid = cid++
+    // 合并options 所有的选项
+    Sub.options = mergeOptions(
+      Super.options,
+      extendOptions
+    )
+    Sub['super'] = Super
+    if (Sub.options.props) {
+      initProps(Sub)
+    }
+    if (Sub.options.computed) {
+      initComputed(Sub)
+    }
+    // 允许子类继续 使用父类的静态方法
+    Sub.extend = Super.extend
+    Sub.mixin = Super.mixin
+    Sub.use = Super.use
+
+    // 子类有自身作用域的 components, directives 和管道
+    ASSET_TYPES.forEach(function (type) {
+      Sub[type] = Super[type]
+    })
+    // enable recursive self-lookup （这句不是很理解)
+    if (name) {
+      Sub.options.components[name] = Sub
+    }
+    Sub.superOptions = Super.options
+    Sub.extendOptions = extendOptions
+    Sub.sealedOptions = extend({}, Sub.options)
+    // cache constructor
+    cachedCtors[SuperId] = Sub // 缓存当前改造过后的构造函数
+    return Sub
+  }
 }
 ```
