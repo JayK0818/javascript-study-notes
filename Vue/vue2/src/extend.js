@@ -1,6 +1,6 @@
 // --------- extend ----------
 (function () {
-  const Profile = Vue.extend({
+  const Profile = Vue.extend({ // extendOptions
     template: `<div><div class='super-container'></div></div>`,
     data() {
       return {
@@ -12,9 +12,14 @@
       double() {
         return this.count * 2
       }
-    }
+    },
+    watch: { // wacher更新是合并为一个数组
+      count() {
+        console.log('Super-watch-updated')
+      }
+    },
   })
-  console.log('--------------- Profile ---------------')
+  console.log('--------------- Profile ---------------', Profile.options)
   // 当前Profile的'全局'组件
   Profile.component('loading', {
     template: `<div style='color: red;'>Loading...</div>`
@@ -30,7 +35,7 @@
   const profile = new Profile({
     template: `<div class='sub-container'>
       {{message}} - {{msg}}
-      <div>{{count}}</div>
+      <button @click='handle_click'>{{count}}</button>
       <div>double: {{double}}</div>
       <div>triple: {{triple}}</div>
       <loading></loading>
@@ -42,9 +47,19 @@
         msg: 'sub'
       }
     },
+    watch: {
+      count() {
+        console.log('profile-watch-updated')
+      }
+    },
     computed: {
       triple() {
         return this.count * 3
+      }
+    },
+    methods: {
+      handle_click() {
+        this.count += 1
       }
     }
   }).$mount('#extend-app')

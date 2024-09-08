@@ -1,5 +1,15 @@
 (function () {
+  // 定义每个选项的混入策略
+/*   Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
+    console.log('自定义混入策略:',toVal, fromVal)
+    return toVal
+  } */
   Vue.mixin({
+    data() {
+      return {
+        msg: '我是来自全局混入的msg'
+      }
+    },
     created() {
       console.log('mixin-created',)
     },
@@ -9,19 +19,20 @@
       },
     }
   })
+
     // 全局混入
   const vm = new Vue({
     el: '#global-mixin-app',
     data() {
       return {
-        message: 'hello'
+        message: 'hello',
+        msg: '你好吗?'
       }
     },
     mounted() {
       console.log(this.message, this.props, this.$options)
     }
   })
-  console.log(vm, '原型', vm.__proto__)
 })();
 
 // 合并mixins中的选项
@@ -55,7 +66,8 @@
     data() {
       return {
         message: 'hello',
-        msg: '你好世界'
+        msg: '你好世界',
+        count: 10
       }
     },
     mixins: [mixin],
@@ -73,6 +85,11 @@
     },
     mounted() {
       console.log('------vm mounted------')
+    },
+    methods: {
+      handle_increment() {
+        this.count += 1
+      }
     }
   }).$mount('#mixin-app')
   console.log(Vue)

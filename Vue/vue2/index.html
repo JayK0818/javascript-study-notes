@@ -7,12 +7,15 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="global-mixin-app"></div>
+  <div id="global-mixin-app">
+    <div>global mixin</div>
+    {{msg}} - {{message}}
+  </div>
   <hr/>
   <div id="mixin-app">
     <div>{{ message }}</div>
     <div>{{ msg }}</div>
-    <button>{{ count }}</button>
+    <button @click="handle_increment">{{ count }}</button>
     <Player></Player>
   </div>
   <hr>
@@ -35,10 +38,18 @@
   <hr/>
   <div id="extend-app">
   </div>
+  <hr>
+  <div id="template-render-app">
+    <div id="template-app"></div>
+    <div id="render-app"></div>
+    <!-- 同时设置template/render 会使用哪个 (使用render函数) -->
+     <div id="render-with-template-app"></div>
+  </div>
   <script src="../src/vue.development-2.js"></script>
   <script src="./src/mixins.js"></script>
   <script src="./src/provide-inject.js"></script>
   <script src="./src/directive.js"></script>
   <script src="./src/extend.js"></script>
+  <script src="./src/render-template.js"></script>
 </body>
 </html>

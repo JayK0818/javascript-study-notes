@@ -5,11 +5,261 @@
   main: commonjs规范入口
   module: esm规范入口
 
+## instance
+
+```js
+// 定义vue构造函数以及实例相关属性的位置
+function Vue (options) {
+  // 判断是否通过new 调用
+  if (process.env.NODE_ENV !== 'production' &&
+    !(this instanceof Vue)
+  ) { //... }
+  this._init(options)
+}
+initMixin(Vue) // 注册_int方法, 初始化vm
+stateMixin(Vue) // 注册 $data, $proxy $set $delete $watch
+eventsMixin(Vue) // $on $off $emit
+lifecycleMixin(Vue) // 生命周期相关方法
+renderMixin(Vue)  // $nextTick, _render
+```
+
+### initMixin
+
+  在Vue.prototype上定义一个_init()方法, 接受调用`new Vue({})` 时传递的参数
+```ts
+// 处理构造函数上定义的一些options属性 如components, filters等
+function resolveConstructorOptions (Ctor: Class<Component>) {
+/*  子类的options 合并了父类上的options和 extendOptions
+    Sub.options = mergeOptions(
+      Super.options,
+      extendOptions
+    ) */
+  let options = Ctor.options // 当前类接受的options
+  if (Ctor.super) { // 在Vue.extend方法中定义了 Sub['super'] = Super， 对父类构造函数的引用
+    /**
+     * Vue.extend中 记录了父类的options
+     * Sub.superOptions = Super.options
+     * Sub.extendOptions = extendOptions (extendOptions 为调用Vue.extend时传递的options)
+    */
+    const superOptions = resolveConstructorOptions(Ctor.super)
+    const cachedSuperOptions = Ctor.superOptions
+    if (superOptions !== cachedSuperOptions) { // Todo: 不理解这里的应用场景
+      Ctor.superOptions = superOptions // 父类的options修改了, 重新更新当前子类对父类options的引用
+      const modifiedOptions = resolveModifiedOptions(Ctor)
+      if (modifiedOptions) {
+        extend(Ctor.extendOptions, modifiedOptions) // 并且将修改的options累加到当前的options中
+      }
+      options = Ctor.options = mergeOptions(superOptions, Ctor.extendOptions)
+      if (options.name) {
+        options.components[options.name] = Ctor
+      }
+    }
+  }
+  return options
+}
+
+let uid = 0
+function initMixin (Vue: Class<Component>) {
+  // 原型上定义_init方法
+  Vue.prototype._init = function (options?: Object) {
+    const vm: Component = this
+    // a uid
+    vm._uid = uid++
+    vm._isVue = true // 设置一个标识符避免将vue实例响应式处理
+    // merge options
+    if (options && options._isComponent) {
+      initInternalComponent(vm, options)
+    } else {
+      // 实例上挂载一个 $options选项, 将在Vue构造函数上的定义的属性和当前实例接受的属性合并
+      vm.$options = mergeOptions(
+        resolveConstructorOptions(vm.constructor),
+        options || {},
+        vm
+      )
+    }
+    if (process.env.NODE_ENV !== 'production') {
+      initProxy(vm)
+    } else {
+      vm._renderProxy = vm
+    }
+    vm._self = vm
+    initLifecycle(vm) // 初始化生命周期相关变量初始化
+    initEvents(vm)  // 初始化事件相关
+/**
+ * function initEvents (vm: Component) {
+      vm._events = Object.create(null)
+      vm._hasHookEvent = false
+      const listeners = vm.$options._parentListeners
+      if (listeners) {
+        updateComponentListeners(vm, listeners)
+      }
+    }
+ * 
+*/
+    initRender(vm)  // 
+    callHook(vm, 'beforeCreate')
+    initInjections(vm)
+    initState(vm)
+    initProvide(vm)
+    callHook(vm, 'created')
+    if (vm.$options.el) {
+      vm.$mount(vm.$options.el)
+    }
+  }
+}
+
+// state相关的初始化 (state, methods, computed, watch)
+function initState (vm: Component) {
+  vm._watchers = []
+  const opts = vm.$options
+  if (opts.props) initProps(vm, opts.props)
+  if (opts.methods) initMethods(vm, opts.methods)
+  if (opts.data) {
+    initData(vm)
+  } else {
+    observe(vm._data = {}, true /* asRootData */)
+  }
+  if (opts.computed) initComputed(vm, opts.computed)
+  if (opts.watch && opts.watch !== nativeWatch) {
+    initWatch(vm, opts.watch)
+  }
+}
+
+function initProps (vm: Component, propsOptions: Object) {
+  const propsData = vm.$options.propsData || {}
+  // propsData只限于使用new 创建的实例
+  const props = vm._props = {}
+  const keys = vm.$options._propKeys = [] // 存储props 键名
+  // ...
+  for (const key in propsOptions) {
+    keys.push(key)
+    const value = validateProp(key, propsOptions, propsData, vm)
+    // ...
+    defineReactive(props, key, value)
+    if (!(key in vm)) { // TODO:...
+      proxy(vm, `_props`, key)
+    }
+  }
+}
+
+function initMethods (vm: Component, methods: Object) {
+  const props = vm.$options.props
+  for (const key in methods) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (typeof methods[key] !== 'function') {
+        // methods 需要是一个函数
+      }
+      if (props && hasOwn(props, key)) {
+        // 方法名不能和接受的props字段冲突
+      }
+      if ((key in vm) && isReserved(key)) { // 不建议使用$ 或者 _开头
+        /**
+         * function isReserved (str: string): boolean {
+            const c = (str + '').charCodeAt(0)
+            return c === 0x24 || c === 0x5F
+          }
+         * 
+        */
+      }
+    }
+    // 将函数修改this指向, 指向当前实例
+    vm[key] = typeof methods[key] !== 'function' ? noop : bind(methods[key], vm)
+  }
+}
+
+function initData (vm: Component) {
+  let data = vm.$options.data
+  data = vm._data = typeof data === 'function'
+    ? getData(data, vm)
+    : data || {}
+  if (!isPlainObject(data)) {
+    data = {}
+  }
+  const keys = Object.keys(data)
+  const props = vm.$options.props
+  const methods = vm.$options.methods
+  let i = keys.length
+  while (i--) {
+    const key = keys[i]
+    if (process.env.NODE_ENV !== 'production') {
+      if (methods && hasOwn(methods, key)) {
+        warn(
+          `Method "${key}" has already been defined as a data property.`,
+          vm
+        )
+      }
+    }
+    if (props && hasOwn(props, key)) {
+      process.env.NODE_ENV !== 'production' && warn(
+        `The data property "${key}" is already declared as a prop. ` +
+        `Use prop default value instead.`,
+        vm
+      )
+    } else if (!isReserved(key)) {
+      proxy(vm, `_data`, key)
+    }
+  }
+  // observe data
+  observe(data, true /* asRootData */)
+}
+```
+
+## mount
+
+  实例挂载
+```js
+// 可能接受的是一个 选择器 或者一个Element对象
+function query (el: string | Element): Element {
+  if (typeof el === 'string') {
+    const selected = document.querySelector(el)
+    if (!selected) {
+      return document.createElement('div')
+    }
+    return selected
+  } else {
+    return el // element对象直接返回
+  }
+}
+// 此处的$mount 在runtime/index 下定义的
+const mount = Vue.prototype.$mount
+// 重新原型上定义的挂载方法 （entry-runtime-with-compiler.js)
+Vue.prototype.$mount = function (
+  el?: string | Element,
+  hydrating?: boolean
+): Component {
+  el = el && query(el)
+  // 开发环境下的警告, 不要使用 body 或者html挂载实例
+  if (el === document.body || el === document.documentElement) {
+    process.env.NODE_ENV !== 'production' && warn(
+      `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
+    )
+    return this
+  }
+  const options = this.$options
+  if (!options.render) { // 如果没有render函数
+    let template = options.template
+    // ...
+    if (template) {
+      const { render, staticRenderFns } = compileToFunctions(template,
+        // ...
+      )
+      // 将模版编译为render函数
+      options.render = render
+      options.staticRenderFns = staticRenderFns
+    }
+  }
+  return mount.call(this, el, hydrating)
+}
+```
+
 ## util
 
   Vue2中的工具函数
 
 ```js
+// 是否在浏览器上
+const inBrowser = typeof window !== 'undefined'
+
 // 是否为undefined
 const isUndefined = (v) => v === undefined || v === null
 
@@ -27,6 +277,18 @@ const isPrimitive = (v) => {
 // 是否为对象
 const isObject = (v) => {
   return v !== null && typeof v === 'object'
+}
+
+// 将一个逗号分隔的字符串 转换为一个map, 并返回一个函数, 用来判断某个字符是否存在与这个map
+function makeMap (str: string, expectsLowerCase?: boolean): (key: string) => true | void {
+  const map = Object.create(null)
+  const list: Array<string> = str.split(',')
+  for (let i = 0; i < list.length; i++) {
+    map[list[i]] = true
+  }
+  return expectsLowerCase
+    ? val => map[val.toLowerCase()]
+    : val => map[val]
 }
 
 // 获取数据的类型
@@ -198,7 +460,7 @@ Vue.use = function (plugin: Function | Object) {
     // 防止插件重复注册
     return this
   }
-  // 获取初插件之前的剩余参数
+  // 获取除插件之后传递的剩余参数
   const args = toArray(arguments, 1)
   args.unshift(this) // 将Vue作为第一个参数添加进数组, 方便后续传递给插件使用
   if (typeof plugin.install === 'function') {
@@ -338,6 +600,23 @@ function normalizeDirectives (options: Object) {
     }
   }
 }
+// components/filters/directives的合并策略
+function mergeAssets (
+  parentVal: ?Object,
+  childVal: ?Object,
+  vm?: Component,
+  key: string
+): Object {
+  const res = Object.create(parentVal || null)
+  if (childVal) {
+    return extend(res, childVal)
+  } else {
+    return res
+  }
+}
+ASSET_TYPES.forEach(function (type) {
+  strats[type + 's'] = mergeAssets
+})
 
 // 递归合并mixin的data中的数据
 function mergeData (to: Object, from: ?Object): Object {
@@ -391,6 +670,17 @@ function dedupeHooks (hooks) { // 过滤掉重复的生命周期函数
   }
   return res
 }
+// 生命周期的函数的合并策略, 每个生命周期函数会合并为一个数组
+LIFECYCLE_HOOKS.forEach(hook => {
+  strats[hook] = mergeHook
+})
+
+// 默认的合并策略
+const defaultStrat = function (parentVal: any, childVal: any): any {
+  return childVal === undefined
+    ? parentVal
+    : childVal
+}
 
 // 合并options (mixin 中合并props)
 function mergeOptions (
@@ -422,6 +712,7 @@ function mergeOptions (
       mergeField(key)
     }
   }
+  // 根据每个字段的混入/合并策略, 将当前组件与mixin中的每个选项下的数据合并
   function mergeField (key) {
     const strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
@@ -484,4 +775,60 @@ export function initExtend (Vue: GlobalAPI) {
     return Sub
   }
 }
+```
+
+## 运行时
+
+  platform/web/runtime/index
+
+```ts
+Vue.prototype.$mount = function (
+  el?: string | Element,
+  hydrating?: boolean
+): Component {
+  el = el && inBrowser ? query(el) : undefined
+  return mountComponent(this, el, hydrating)
+}
+// 此处注册了两个全局指令, v-model / v-show
+extend(Vue.options.directives, platformDirectives)
+// 此处注册了两个全局组件 transition / transition-group
+extend(Vue.options.components, platformComponents)
+
+// 为false的属性值
+const isFalsyAttrValue = (val: any): boolean => {
+  return val == null || val === false
+}
+const isBooleanAttr = makeMap('allowfullscreen,async,autofocus') // ...... 
+
+// 接受value值的标签
+const acceptValue = makeMap('input,textarea,option,select,progress')
+const mustUseProp = (tag: string, type: ?string, attr: string): boolean => {
+  return (
+    (attr === 'value' && acceptValue(tag)) && type !== 'button' ||
+    (attr === 'selected' && tag === 'option') ||
+    (attr === 'checked' && tag === 'input') ||
+    (attr === 'muted' && tag === 'video')
+  )
+}
+
+const isReservedAttr = makeMap('style,class')
+
+// isHTMLTag, isSVG 枚举了所有的标签, 
+const isHTMLTag = makeMap(
+  'html,body,base,head,link,meta,style,title,' +
+ // ...
+)
+const isReservedTag = (tag: string): ?boolean => {
+  return isHTMLTag(tag) || isSVG(tag)
+}
+// input 的 type属性
+const isTextInputType = makeMap('text,number,password,search,email,tel,url')
+
+Vue.config.mustUseProp = mustUseProp
+Vue.config.isReservedTag = isReservedTag
+Vue.config.isReservedAttr = isReservedAttr
+// ...
+
+Vue.prototype.__patch__ = inBrowser ? patch : noop
+// ...
 ```
