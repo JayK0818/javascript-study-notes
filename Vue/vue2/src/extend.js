@@ -65,3 +65,66 @@
   }).$mount('#extend-app')
   console.log('profile', profile)
 })();
+
+// ----------------- extend -----------------
+// vue中extend的类似实现
+(function () {
+  const extend = (to, from) => {
+    for (const key in from) {
+      to[key] = from[key]
+    }
+    return to
+  }
+  function Phone() {
+    this.cid += 1
+  }
+  Phone.options = {
+    message: 'hello Super Constructor'
+  }
+  function initExtend(Ctor) {
+    let cid = 0
+    Ctor.cid = 0
+    Ctor.extend = function (extendOptions) {
+      const Super = this
+      const SuperId = Super.cid
+      const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
+      if (cachedCtors[SuperId]) {
+        console.log('缓存了吗', cachedCtos[SuperId])
+        return cachedCtors[SuperId]
+      }
+      const Sub = function VueComponent(options) {
+        console.log('-----options------', options)
+      }
+      Sub.prototype = Object.create(Super.prototype)
+      Sub.prototype.constructor = Sub
+      Sub.cid = cid++
+      Sub.options = extend(Super.options, extendOptions)
+      Sub['super'] = Super
+      cachedCtors[SuperId] = Sub
+      return Sub
+    }
+  }
+  initExtend(Phone)
+  new Phone()
+  new Phone()
+  const XiaoMi = Phone.extend({
+    name: 'xiaomi'
+  })
+  const xiaomi_white = new XiaoMi({
+    color: 'white'
+  })
+  const xiaomi_black = new XiaoMi({
+    color: 'black'
+  })
+  const HuaWei = Phone.extend({
+    name: 'huawei'
+  })
+  const huawei_white = new HuaWei({
+    color: 'white'
+  })
+  const huawei_black = new HuaWei({
+    color: 'black'
+  })
+  console.log(xiaomi_white, xiaomi_black)
+  console.log(huawei_white, huawei_black)
+})();

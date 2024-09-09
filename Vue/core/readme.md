@@ -83,7 +83,7 @@ function initMixin (Vue: Class<Component>) {
       vm._renderProxy = vm
     }
     vm._self = vm
-    initLifecycle(vm) // 初始化生命周期相关变量初始化
+    initLifecycle(vm) // 初始化生命周期相关变量初始化， 一些标志位的定义
     initEvents(vm)  // 初始化事件相关
 /**
  * function initEvents (vm: Component) {
