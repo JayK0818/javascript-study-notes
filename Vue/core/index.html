@@ -7,6 +7,19 @@
   <title>Vue-Core</title>
 </head>
 <body>
+  <div id="mini-vue-app">
+    <div>差值表达式</div>
+    <div class="message">{{ message }}</div>
+    <button class="button">{{ count }}</button>
+    <div>
+      v-model
+      <input type="text" v-model="msg">
+    </div>
+    <div>
+      v-text
+      <div v-text="msg"></div>
+    </div>
+  </div>
   <script src="./js/observer.js"></script>
 </body>
 </html>
