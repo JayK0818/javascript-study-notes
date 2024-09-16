@@ -135,9 +135,9 @@ function initProps (vm: Component, propsOptions: Object) {
     keys.push(key)
     const value = validateProp(key, propsOptions, propsData, vm)
     // ...
-    defineReactive(props, key, value)
+    defineReactive(props, key, value) // 将props处理为响应式
     if (!(key in vm)) { // TODO:...
-      proxy(vm, `_props`, key)
+      proxy(vm, `_props`, key) // 将props注入到组件实例上
     }
   }
 }
@@ -170,7 +170,7 @@ function initMethods (vm: Component, methods: Object) {
 function initData (vm: Component) {
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
+    ? getData(data, vm) // 判断data类型, 如果是函数 调用当前函数返回的对象
     : data || {}
   if (!isPlainObject(data)) {
     data = {}
@@ -183,19 +183,12 @@ function initData (vm: Component) {
     const key = keys[i]
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
-        warn(
-          `Method "${key}" has already been defined as a data property.`,
-          vm
-        )
+        // 判断data的key 是否与函数名重合
       }
     }
     if (props && hasOwn(props, key)) {
-      process.env.NODE_ENV !== 'production' && warn(
-        `The data property "${key}" is already declared as a prop. ` +
-        `Use prop default value instead.`,
-        vm
-      )
-    } else if (!isReserved(key)) {
+      // 判断data的key是否与props重名
+    } else if (!isReserved(key)) { // 非_ 和 $开头的属性
       proxy(vm, `_data`, key)
     }
   }
@@ -407,6 +400,18 @@ unction initGlobalAPI (Vue) {
   initMixin(Vue)
   initExtend(Vue)
   initAssetRegisters(Vue)
+}
+
+/**
+ * Define a property.
+ */
+function def (obj: Object, key: string, val: any, enumerable?: boolean) {
+  Object.defineProperty(obj, key, {
+    value: val,
+    enumerable: !!enumerable,
+    writable: true,
+    configurable: true
+  })
 }
 ```
 
@@ -832,3 +837,196 @@ Vue.config.isReservedAttr = isReservedAttr
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 // ...
 ```
+
+## Observer
+
+```ts
+function protoAugment (target, src: Object) {
+  target.__proto__ = src
+}
+function copyAugment (target: Object, src: Object, keys: Array<string>) {
+  for (let i = 0, l = keys.length; i < l; i++) {
+    const key = keys[i]
+    def(target, key, src[key])
+  }
+}
+// 拦截数组的变异方法
+methodsToPatch.forEach(function (method) {
+  const original = arrayProto[method] // 缓存数组原型上的方法
+  def(arrayMethods, method, function mutator (...args) {
+    const result = original.apply(this, args) // 调用数组方法之后返回的结果
+    const ob = this.__ob__
+    let inserted // 插入数组中的元素
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+    }
+    // 将插入的数据定义为响应式
+    if (inserted) ob.observeArray(inserted)
+    ob.dep.notify()
+    return result
+  })
+})
+
+export class Observer {
+  value: any;
+  dep: Dep;
+  vmCount: number; // number of vms that have this object as root $data
+  constructor (value: any) {
+    this.value = value
+    this.dep = new Dep()
+    this.vmCount = 0
+    def(value, '__ob__', this) // 得对象定义一个__ob__属性
+    if (Array.isArray(value)) {
+      if (hasProto) { // 如果支持访问__proto__ 属性
+/*        const arrayProto = Array.prototype
+          const arrayMethods = Object.create(arrayProto) */
+        protoAugment(value, arrayMethods) // 拦截当前数组的原型对象重新赋值
+      } else {
+        // 
+        copyAugment(value, arrayMethods, arrayKeys)
+      }
+      // 给数组定义响应式
+      this.observeArray(value)
+    } else {
+      this.walk(value)
+    }
+  }
+  walk (obj: Object) {
+    const keys = Object.keys(obj)
+    for (let i = 0; i < keys.length; i++) {
+      defineReactive(obj, keys[i])
+    }
+  }
+  observeArray (items: Array<any>) {
+    for (let i = 0, l = items.length; i < l; i++) {
+      observe(items[i])
+    }
+  }
+}
+```
+
+## Dep
+
+```js
+// 观察者模式
+export default class Dep {
+  static target: ?Watcher;
+  id: number;
+  subs: Array<Watcher>;
+  constructor () {
+    this.id = uid++
+    this.subs = []
+  }
+  addSub (sub: Watcher) {
+    this.subs.push(sub)
+  }
+  removeSub (sub: Watcher) {
+    remove(this.subs, sub)
+  }
+  depend () {
+    if (Dep.target) {
+      Dep.target.addDep(this)
+    }
+  }
+  notify () {
+    const subs = this.subs.slice()
+    if (process.env.NODE_ENV !== 'production' && !config.async) {
+      subs.sort((a, b) => a.id - b.id)
+    }
+    for (let i = 0, l = subs.length; i < l; i++) {
+      subs[i].update()
+    }
+  }
+}
+
+Dep.target = null
+const targetStack = []
+
+// watcher入栈
+/**
+ * 父子组件嵌套的时候先把父组件对应的watcher入栈,
+*/
+function pushTarget (target: ?Watcher) {
+  targetStack.push(target)
+  Dep.target = target
+}
+// 出栈
+function popTarget () {
+  targetStack.pop()
+  Dep.target = targetStack[targetStack.length - 1]
+}
+```
+
+## Set
+
+  新增属性 使其也为响应式
+```js
+function set (target: Array<any> | Object, key: any, val: any): any {
+  // ...
+  // 数据源为数组 并且是合法的数组下标
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
+    target.length = Math.max(target.length, key) // 修改length
+    target.splice(key, 1, val) // 此处调用的是修改了数组原型之后的splice()方法，并且将新增的数据设置为响应式
+    return val
+  }
+  // 如果属性已经存在于对象上 并且不在对象的原型上
+  if (key in target && !(key in Object.prototype)) {
+    target[key] = val
+    return val
+  }
+  const ob = (target: any).__ob__
+  if (target._isVue || (ob && ob.vmCount)) {
+    // 禁止添加vue实例 或者 响应式对象
+    return val
+  }
+  // 对象源不是响应式对象
+  if (!ob) {
+    target[key] = val
+    return val
+  }
+  defineReactive(ob.value, key, val)
+  ob.dep.notify()
+  return val
+}
+```
+
+## Delete
+
+  删除对象或者数组的一个属性 使视图更新
+```js
+export function del (target: Array<any> | Object, key: any) {
+  // 数组, 使用splice() 方法更新
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
+    target.splice(key, 1)
+    return
+  }
+  const ob = (target: any).__ob__
+  if (target._isVue || (ob && ob.vmCount)) {
+    // 不能删除实例对象上的一个属性
+    return
+  }
+  // 如果目标对象上没有属性
+  if (!hasOwn(target, key)) {
+    return
+  }
+  delete target[key]
+  // 如果不是响应式属性直接返回
+  if (!ob) {
+    return
+  }
+  ob.dep.notify()
+}
+```
+
+# Watcher
+
+  watcher创建顺序:
+  1. 计算属性watcher
+  2. 用户watcher (watch)
+  3. 渲染watcher

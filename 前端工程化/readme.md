@@ -128,5 +128,13 @@ prompting() {
 
   plop
 
+## 项目规范约定
+
+1. 代码相关: js/ts/style 编码规范
+2. 命名与单词拼写规范
+3. git提交规范
+
+  stylelint
+  cspell
 
 

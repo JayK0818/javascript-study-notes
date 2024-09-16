@@ -28,6 +28,7 @@
     return Array.from(arguments)
   }
   console.log(fn.call(bar, 1, 2, 3, 4, 5))
+  // 连续调用call
 })();
 
 // ----------- 传入 this 为 null 或者 undefined

@@ -52,6 +52,7 @@
         configurable: true,
         get() {
           Dep.target && dep.addSub(Dep.target)
+          console.log('我会执行吗')
           return val
         },
         set(newValue) {
@@ -87,13 +88,13 @@
       new Observer(this.$data)
       new Compiler(this)
     }
-    _proxy(data) {
+    _proxy(data) { // 将对象注入到实例
       Object.keys(data).forEach(key => {
         Object.defineProperty(this, key, {
           enumerable: true,
           configurable: true, // writable, value / getter, setter 不能同时设置
           get() {
-            // 收集依赖
+            console.log('我会执行吗')
             return data[key]
           },
           set(newValue) {
