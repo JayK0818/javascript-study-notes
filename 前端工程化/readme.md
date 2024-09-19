@@ -136,5 +136,15 @@ prompting() {
 
   stylelint
   cspell
+  commitlint
+  husky
+
+[husky](https://typicode.github.io/husky/zh/get-started.html)
+
+[style-lint](https://stylelint.io/user-guide/get-started/)
+
+[commit-lint](https://commitlint.js.org/guides/getting-started.html)
+
+[lint-staged](https://putridparrot.com/blog/category/lint-staged/)
 
 
