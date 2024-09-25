@@ -12,7 +12,7 @@
   <script type='module'>
     //  解析DOM之后， 在DOMContentLoaded 之前 执行的
     // type='module' 相当于加了 defer属性
-    import {add, hello} from './js/default.js'
+    import { add, hello } from './js/default.js'
     const message = hello('hello')
     const result = add(1,2)
     console.log(result)
@@ -30,14 +30,14 @@
       console.log('DomContentLoaded')
     },false)
 
-/*     const Fragment = document.createDocumentFragment();
+    const Fragment = document.createDocumentFragment();
     const list = document.querySelector('#list')
     for(let i = 0; i < 100000; i++){
       const li = document.createElement('li')
       li.textContent = i;
       Fragment.appendChild(li)
     }
-    list.appendChild(Fragment) */
+    list.appendChild(Fragment)
   </script>
 </body>
 </html>

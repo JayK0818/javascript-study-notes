@@ -30,7 +30,8 @@ cd ~/ git clone https://github.com/nvm-sh/nvm.git .nvm
 ```json
 {
    "private": "true",  // 私有包
-   "preinstall": "npx only-allow pnpm"
+   "preinstall": "npx only-allow pnpm",
+   "packageManager": "pnpm"
 }
 ```
 
@@ -84,9 +85,13 @@ Graphite / Grafana 监控 Node.js 应用
 
 ```js
 {
+   "description": "包的描述", // 可以在npm.js搜索栏搜索关键字
+   "keywords": ["lint", "cli"],  // 关键字
+   "bin": "./bin/index.js",
+   "main": "/main/index.js",     // 主入口
    "vue": "~3.2.1",  // 安装3.2的最新版本, 不低于3.2.1 但是不安装3.3, 安装时不改变大版本号和次要版本号
    "vue-router": "^4.2.1"  // 安装4.x.x的最新版本, 但是不安装5.x.x, 安装时不改变大版本号
-   "vuex": "latest"  // 安装最新版本
+   "vuex": "latest",  // 安装最新版本
 }
 ```
    主版本号.次要版本.修订号
@@ -161,3 +166,54 @@ npm profile set password 123456
 
 1. User-scoped private packages
 2. Organization-scoped private packages
+
+[semver版本文档](https://semver.org/lang/zh-CN/)
+
+   0.0.1-alpha    内测
+   0.0.1-beta     公测
+   0.0.1-rc       relase candidate
+
+## Package
+
+### only-allow
+
+   Force a specific package manager to be used on a project
+
+```json
+{
+  "packageManager": "pnpm@9.11.0", // 指定包管理类型以及指定版本
+   "scripts": {
+      "preinstall": "npx only-allow pnpm"
+   },
+   "engines": { // 开发环境
+      "node": "=16.15.1",
+      "pnpm": "=7.5.1"
+   },
+   "peerDependencies": {
+      "react": ">=16.8.0"
+   }
+}
+```
+
+## 多包管理工具
+
+   lerna
+   pnpm
+   monorepo
+
+1. 提供标准的工作流程
+
+[lerna](https://www.lernajs.cn/docs/getting-started)
+
+## validate-npm-package-name
+
+   Give me a string an I'll tell you if it's a valid npm package name.
+
+[validate-npm-package-name](https://www.npmmirror.com/package/validate-npm-package-name)
+
+## npm
+
+```shell
+npm view vue
+npm view react    # 查看已经发布的一些包的信息
+```
