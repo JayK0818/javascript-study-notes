@@ -94,3 +94,70 @@ Graphite / Grafana 监控 Node.js 应用
    1. 主版本号: 做了不兼容的API修改
    2. 次版本: 做了向下兼容的功能性新增
    3. 修订号: 向下兼容的问题修正
+
+## Modules
+
+   A module is any file or directory in the *node_modules* directory that can be loaded by the Node.js *require()* function.
+
+   To be loaded by the Node.js *require()* function, a module must be one of the following:
+1. A folder with a **package.json** file containing a **main** field.
+2. A JavaScript file.
+
+## Login
+
+```shell
+npm login # 用户登录
+
+npm whoami # to test you have successfully logged in.
+```
+
+## two-factor authentication
+
+   Two-factor authentication provides the best possible security for your account against attachers.
+
+   You can enable two-factor authentication on your npm user account to protect against unauthorized access to your account
+   and packages, either by using a **security-key** or **time-based one-time password(TOTP)** from  mobile app.
+
+```shell
+npm profile enable-2fa auth-and-writes
+
+npm profile enable-2fa auth-only
+
+npm profile disable-2fa
+
+# sending a one-time password from the command line
+npm publish xxx --otp=123456
+```
+
+## Manage profile settings
+
+
+```shell
+# viewing user account profile settings from the command line
+
+npm profile get
+
+# updating user account profile settings from the command line
+npm profile set email xxx@xx.com
+npm profile set password 123456
+```
+
+## Scopes
+
+   When you sign up for an npm user account or create an organization, you are granted a scope that matches your user or organization name.
+   You can use this scope as a namespace for related packages.
+
+   A scope allows you to create a package with the same name as a package created by another user or organization without conflict.
+
+   @npm/package-name
+
+   Unscoped packages are always public.
+   Private packages are always scoped.
+
+## Private packages
+
+   With npm private packages, you can use the npm registry to host code that is only visible to you and chosen collaborators,
+   allowing you to manage and use private code alongside public code in your projects.
+
+1. User-scoped private packages
+2. Organization-scoped private packages
