@@ -169,9 +169,10 @@ npm profile set password 123456
 
 [semver版本文档](https://semver.org/lang/zh-CN/)
 
-   0.0.1-alpha    内测
-   0.0.1-beta     公测
-   0.0.1-rc       relase candidate
+   0.0.1-alpha    内测(内部斑斑)
+   0.0.1-beta     公测(测试版本)
+   0.0.1-rc       relase candidate(即将作为正式版发布)
+   0.0.1-lts      长期维护
 
 ## Package
 
