@@ -248,7 +248,6 @@ res.writeHead(200, {
   'Content-Security-Policy': 'default-src \'self\''
 })
 ```
-
   default-src:
 1. child-src (定义了使用如 frame 和 iframe 等元素在加载web worker和嵌套浏览上下文时的有效来源。)
 2. connect-src

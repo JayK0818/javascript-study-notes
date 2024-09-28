@@ -16,8 +16,8 @@ ThisExpression | Identify | Literal | ArrayExpression | ObjectExpression | Funct
 ArrowFunctionExpression | ClassExpression | Super | NewExpression | CallExpression | UpdateExpression |
 AwaitExpression | ...
 
-```ts
-export default function ({ types: t }) {
+```js
+export default function ({ types }) {
   return {
     visitor: {
       // visitor contents
