@@ -17,7 +17,7 @@
     subscribes.forEach(subscribe => {
       subscribe(...args)
     })
-  }
+  } 
 
   const publishSubscribe = new PublishSubscribeManager()
   publishSubscribe.subscribe('click', () => {
