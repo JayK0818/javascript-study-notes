@@ -69,7 +69,7 @@
       }
     }
     return list */
-    for (let i = 1; i < length; i++) {
+/*     for (let i = 1; i < length; i++) {
       let cur = list[i]
       let j = i - 1
       while (j >= 0 && list[j] > cur) {
@@ -77,6 +77,16 @@
         j--
       }
       list[j + 1] = cur
+    } */
+    for (let i = 1; i < length; i++) {
+      const cur = list[i]
+      let j = i - 1
+      while (j >= 0 && list[j] > cur) {
+        list[j + 1] = list[j]
+        j--
+      }
+      list[j + 1] = cur
+      console.log('list', list)
     }
     return list
   }
