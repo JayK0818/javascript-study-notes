@@ -22,8 +22,48 @@
 1. -m / --message='msg': Use the given msg as the commit message.
 
   git-restore   Restore working tree files.
+  This command can also be used to restore the content in the index with **--staged**, or restore both the working
+  tree and the index with **--staged --worktree**
+
+  --staged: 恢复暂存区中的内容到工作区
+  --worktree: 恢复工作区中的文件内容到当前工作去状态
+
+  git-reset     Reset current HEAD to the specified state.
+
+1. git-reset --hard:  Resets the index and working tree. Any changes to tracked files in the working tree since commit
+are discarded.
+
+  git-rm        Remove files from the working tree and from the index. **git rm** will not remove a file from just your working directory.
 
 [git pull文档](https://juejin.cn/post/7389650358539255845)
+
+  git-branch  List, create or delete branches
+
+1. -d / --delete: Delete a branch.
+2. -D shortcut for **--delete --force**
+3. -a List both remote-tracking branches and local branches.
+4. -l/--List List branches.
+
+  git-checkout  Switch branches or restore working tree files
+
+  git-switch
+  switch to a specified branch. The working tree and index are updated to match the branch.
+
+  git merge
+  Join two or more development histories toghter.
+
+  git log
+  Show commit logs
+
+  git stash
+  Use **git stash** when you want to record the current state of the working directory and the index, but want to
+  go back to a clean working directory. The command saves your local modifications away and reverts the working directory to match the **HEAD** commit.
+
+1. list:  List the stash entries that you currently have.
+2. pop:   Remove a single stashed state from the stash list and apply it on top of the current working tree state.
+3. apply [--index]: Like **pop**, but do not remove the state from the stash list.
+4. clear: Remove all the stash entries.
+5. drop:  Remove a single stash entry from the list of stash entries.
 
 ## Commit规范
 
