@@ -108,6 +108,12 @@ used by argument-less **git-pull** and other commands.
   Revert some existing commits
   **git revert** is used to record some new commits to reverse the effect of some earlier commits(ofen only a faulty one.)
 
+  git-clean
+  Remove untracked files from the working tree
+
+  git-gc
+  Cleanup unnecessary files and optimize the local repository
+
 ## Commit规范
 
 1. feat: a new feature
@@ -117,9 +123,6 @@ used by argument-less **git-pull** and other commands.
 5. test: add missing tests or correcting existing tests
 6. chore: changes that do not modify src or test files, such as updating build tasks, package manager
 7. style: code style, changes that do not affect the meaning of the code(white-space, formatting, missing semi-colons ect.)
-<<<<<<< HEAD
-
-  hahahahahhaha
 
 ## Hooks
 
@@ -140,5 +143,3 @@ used by argument-less **git-pull** and other commands.
 ### pre-auto-gc
 
   This hook is invoked by **git gc --auto**
-=======
->>>>>>> parent of e7c6c98 (docs: 测试git命令提交)
