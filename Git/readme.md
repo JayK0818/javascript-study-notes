@@ -139,4 +139,3 @@ used by argument-less **git-pull** and other commands.
 ### pre-auto-gc
 
   This hook is invoked by **git gc --auto**
-  
