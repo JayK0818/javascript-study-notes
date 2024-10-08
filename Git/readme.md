@@ -119,3 +119,24 @@ used by argument-less **git-pull** and other commands.
 7. style: code style, changes that do not affect the meaning of the code(white-space, formatting, missing semi-colons ect.)
 
   hahahahahhaha
+
+## Hooks
+
+  Hooks are programs you can place in a hooks directory to trigger actions at certain points in git's execution.
+
+### pre-commit
+
+  This hook is invoked by **git-commit** and can be bypassed with the **--no-verify** option.
+  Is invoked before obtaining the proposed commit log message and making a commit.
+  Exiting with a non-zero status from this script causes the **git commit** command to abort before
+  creating a commit.
+
+### commit-msg
+
+  This hook is invoked by **git commit** and **git merge**. It takes a single parameter, the name of the file that
+  holds the proposed commit log message.
+
+### pre-auto-gc
+
+  This hook is invoked by **git gc --auto**
+  
