@@ -3,6 +3,14 @@
 ## command
 
   git-config  Get and set repository or global options.
+
+```shell
+git config --global core.autocrlf false
+git config --global pull.rebase true
+git config --global user.name 'hello'
+gig config --global user.email 'xxx@qq.com'
+```
+
   git-init    Create an empty Git repository or reinitialize an existing one
   git-clone   Clone a repository into a new directory
 
@@ -46,6 +54,10 @@ are discarded.
 
   git-checkout  Switch branches or restore working tree files
 
+```shell
+git checkout dev
+```
+
   git-switch
   switch to a specified branch. The working tree and index are updated to match the branch.
 
@@ -64,6 +76,37 @@ are discarded.
 3. apply [--index]: Like **pop**, but do not remove the state from the stash list.
 4. clear: Remove all the stash entries.
 5. drop:  Remove a single stash entry from the list of stash entries.
+
+  git-fetch
+  Download objects and refs from another repository
+
+  git-pull
+  Fetch from and integrate with another repository or a local branch
+  **git pull** runs **git fetch** with the given parameters and then depending on configuration options or command
+  line flags, will call either **git rebase** or **git merge** to reconcile deverging branches.
+  The users needs to specify how to reconcile the divergent branches with **--rebase** or **--no-rebase**.
+
+```shell
+git pull --rebase origin dev
+```
+
+  git-push
+  Update remote refs along with associated objects.
+
+```shell
+git push origin dev
+```
+
+1. -u / --set-upstream: For every branch that is up to date or successfully pushed, add upstream(tracking) reference,
+used by argument-less **git-pull** and other commands.
+
+  git-rebase
+  Reapply commits on top of another base tip.
+  If branch is specified, **git rebase** will perform an automatic **git switch branch** before doing anything else. Otherwise it remains on the current branch.
+
+  git-revert
+  Revert some existing commits
+  **git revert** is used to record some new commits to reverse the effect of some earlier commits(ofen only a faulty one.)
 
 ## Commit规范
 
