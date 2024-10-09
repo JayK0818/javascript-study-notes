@@ -1,5 +1,7 @@
 # Git
 
+  暂存区: stage 或 index. 一般存放在 **.git** 目录下的index文件中。
+
 ## command
 
   git-config  Get and set repository or global options.
@@ -9,12 +11,23 @@ git config --global core.autocrlf false
 git config --global pull.rebase true
 git config --global user.name 'hello'
 gig config --global user.email 'xxx@qq.com'
+
+git config --list   # 配置列表
+git config user.name #用户名
+
+# 通过SSH进行Git操作
+ssh-keygen -t rsa -b 4096 -C 'XXX.email@emial.com'
 ```
 
   git-init    Create an empty Git repository or reinitialize an existing one
   git-clone   Clone a repository into a new directory
 
-  git-add
+```shell
+git clone https://xxx.git <directory>
+# 克隆到指定文件夹
+```
+
+  git-add  工作区 ----> 暂存区
 
 1. Add file contents to the index. The 'index' holds a snapshot of the content of the working tree, and it is this snapshot that is taken as the contents of the next commit.
 2. This command can be performed multiple times before a commit.
@@ -25,7 +38,12 @@ gig config --global user.email 'xxx@qq.com'
 
   git-diff    Show changes between commits, commit and working tree, etc.
 
-  git-commit  Record changes to the repository.
+```shell
+git diff --cached  # 查看暂存区和最后一次提交之间的差异
+git diff           # 查看工作区和暂存区之间的差异
+```
+
+  git-commit  Record changes to the repository. 暂存区 ---> 版本库
 
 1. -m / --message='msg': Use the given msg as the commit message.
 
@@ -41,6 +59,8 @@ gig config --global user.email 'xxx@qq.com'
 1. git-reset --hard:  Resets the index and working tree. Any changes to tracked files in the working tree since commit
 are discarded.
 
+2. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
+
   git-rm        Remove files from the working tree and from the index. **git rm** will not remove a file from just your working directory.
 
 [git pull文档](https://juejin.cn/post/7389650358539255845)
@@ -52,10 +72,23 @@ are discarded.
 3. -a List both remote-tracking branches and local branches.
 4. -l/--List List branches.
 
+```shell
+git branch -d new-feature
+
+# 删除远程仓库分支
+git push origin --delete new-feature
+```
+
   git-checkout  Switch branches or restore working tree files
 
 ```shell
 git checkout dev
+
+git checkout HEAD .
+git checkout HEAD --file  #清除工作区中未提交的改动和暂存区中未提交的改动
+
+git checkout .
+git checkout --file       #清除工作区中未添加到暂存区中的改动。
 ```
 
   git-switch
@@ -63,6 +96,11 @@ git checkout dev
 
   git merge
   Join two or more development histories toghter.
+
+```shell
+git pull origin main
+git merge new-feature
+```
 
   git log
   Show commit logs
@@ -88,6 +126,10 @@ git checkout dev
 
 ```shell
 git pull --rebase origin dev
+
+# 或者
+git fetch origin branch-name
+git merge origin/branch-name
 ```
 
   git-push
@@ -113,6 +155,16 @@ used by argument-less **git-pull** and other commands.
 
   git-gc
   Cleanup unnecessary files and optimize the local repository
+
+## gitignore
+
+  A **gitignore** file specifies intentionally untracked files that Git should ignore.
+
+1. A trailing "/**" matches everything inside. "abc/**" matches all files inside directory "abc", relative to the
+location of the ".gitignore" file, with infinite depth.
+
+2. A leading "**" followed by aslash means match in all directories. '**/foo' matches file or directory 'foo'
+anywhere.
 
 ## Commit规范
 
