@@ -88,6 +88,10 @@ Graphite / Grafana 监控 Node.js 应用
 
 ## package.json
 
+1. lists the packages your project depends on
+2. specifies versions of a package that your project can use
+3. makes your build reproducible, and therefore easier to share with other developers
+
 ```js
 {
    "description": "包的描述", // 可以在npm.js搜索栏搜索关键字

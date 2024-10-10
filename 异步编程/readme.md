@@ -27,11 +27,11 @@
 
 宏任务
 1. setTimeout
-2. setInteval
+2. setInterval
 3. requestAnimationFrame
 4. setImmediate
 
 微任务
-1. prodess.nextTick
+1. process.nextTick
 2. MutationObserver
 3. Promise.then
