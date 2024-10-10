@@ -85,6 +85,7 @@ git reset
 git reset --mixed(默认)         # 暂存区重置, 工作目录保持不变
 git reset --hard  # 暂存区和工作目录都重置
 ```
+  aaaaaaa
 
 2. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
 
