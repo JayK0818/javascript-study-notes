@@ -2,6 +2,27 @@
 
   暂存区: stage 或 index. 一般存放在 **.git** 目录下的index文件中。
 
+  Git文件状态分为三种: 工作目录(working directory)、暂存区(Staging area)、本地仓库(Local Repository)。
+
+1. 工作目录:
+  Untracked: 新创建的文件, 未被Git记录
+  Modified:  已被跟踪的文件发生了更改, 但这些更改未被提交到git记录中
+
+2. 暂存区
+  临时存储区, 用于保存即将提交到本地仓库的更改。
+
+```shell
+git add <filename>  # 添加指定文件到暂存区
+git add .           # 添加所有更改到暂存区
+```
+
+3. 本地仓库
+  本地仓库是一个隐藏在.git目录中的数据库, 用于存储项目的所有提交历史记录。每次提交更改时, Git会将暂存区中的内容保存到本地仓库中。
+
+```shell
+git commit -m 'commit-message' # 提交暂存区的更改到本地仓库
+```
+
 ## command
 
   git-config  Get and set repository or global options.
@@ -73,11 +94,16 @@ are discarded.
 4. -l/--List List branches.
 
 ```shell
-git branch -d new-feature
+git branch -d new-feature # 删除本地分支
 
 # 删除远程仓库分支
 git push origin --delete new-feature
+
+git branch -a # 查看本地和远程分支
+git branch -r # 查看远程分支
+git merge <branch-name> # 将其他分支内容合并到当前分支
 ```
+  合并过程中出现冲突时, Git会标记冲突文件, 需要手动解决冲突。
 
   git-checkout  Switch branches or restore working tree files
 
@@ -95,7 +121,7 @@ git checkout --file       #清除工作区中未添加到暂存区中的改动�
   switch to a specified branch. The working tree and index are updated to match the branch.
 
   git merge
-  Join two or more development histories toghter.
+  Join two or more development histories together.
 
 ```shell
 git pull origin main
@@ -104,6 +130,15 @@ git merge new-feature
 
   git log
   Show commit logs
+
+  git blame <file> 以列表形式查看指定文件的历史修改记录
+
+```shell
+git log --oneline #以简洁的一行格式显示提交信息
+git log --stat    #显示简略统计信息, 包括修改的文件和行数
+git log --graph   # 以图形化方式显示分支和合并历史
+git log -n 5      # 限制显示的提交数(最近5次提交记录)
+```
 
   git stash
   Use **git stash** when you want to record the current state of the working directory and the index, but want to
@@ -148,7 +183,7 @@ used by argument-less **git-pull** and other commands.
 
   git-revert
   Revert some existing commits
-  **git revert** is used to record some new commits to reverse the effect of some earlier commits(ofen only a faulty one.)
+  **git revert** is used to record some new commits to reverse the effect of some earlier commits(often only a faulty one.)
 
   git-clean
   Remove untracked files from the working tree
@@ -163,7 +198,7 @@ used by argument-less **git-pull** and other commands.
 1. A trailing "/**" matches everything inside. "abc/**" matches all files inside directory "abc", relative to the
 location of the ".gitignore" file, with infinite depth.
 
-2. A leading "**" followed by aslash means match in all directories. '**/foo' matches file or directory 'foo'
+2. A leading "**" followed by a slash means match in all directories. '**/foo' matches file or directory 'foo'
 anywhere.
 
 ## Commit规范
