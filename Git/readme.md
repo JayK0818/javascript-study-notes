@@ -80,6 +80,12 @@ git diff           # 查看工作区和暂存区之间的差异
 1. git-reset --hard:  Resets the index and working tree. Any changes to tracked files in the working tree since commit
 are discarded.
 
+```shell
+git reset
+git reset --mixed(默认)         # 暂存区重置, 工作目录保持不变
+git reset --hard  # 暂存区和工作目录都重置
+```
+
 2. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
 
   git-rm        Remove files from the working tree and from the index. **git rm** will not remove a file from just your working directory.
