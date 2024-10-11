@@ -114,6 +114,8 @@ git reset --soft HEAD~2        # 回退所有内容到 上上一个版本
 4. -l/--List List branches.
 
 ```shell
+git branch  # 查看分支
+git branch branch-name  #创建分支
 git branch -d new-feature # 删除本地分支
 
 # 删除远程仓库分支
@@ -283,3 +285,5 @@ anywhere.
 ### pre-auto-gc
 
   This hook is invoked by **git gc --auto**
+
+  我是开发分支代码
