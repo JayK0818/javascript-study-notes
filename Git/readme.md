@@ -154,7 +154,7 @@ git merge new-feature
   git log
   Show commit logs
 
-  git blame <file> 以列表形式查看指定文件的历史修改记录
+  git blame file 以列表形式查看指定文件的历史修改记录
 
 ```shell
 git log --oneline #以简洁的一行格式显示提交信息
@@ -285,5 +285,3 @@ anywhere.
 ### pre-auto-gc
 
   This hook is invoked by **git gc --auto**
-
-  我是开发分支代码
