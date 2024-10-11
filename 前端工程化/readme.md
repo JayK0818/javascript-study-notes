@@ -3,7 +3,7 @@
   复杂程序 -- 拆分成不同具有原子功能的模块
   单一模块内部的方法 应该是私有的, 向外部提供定义好的方法以及属性等
 
-1.  全局模式
+1. 全局模式
 
 ```js
 // 全局污染
@@ -12,6 +12,7 @@ window.fn1 = function() {
 window.fn2 = function () {
 }
 ```
+
 2. namespace
 
 ```js
@@ -39,6 +40,7 @@ module_a.message = '你好 世界'
 
 // 不同模块引入顺序不能颠倒
 ```
+
 4. CommonJS
 
   模块同步加载执行
@@ -98,14 +100,19 @@ npm install -g generator-webapp
 
   We will use generator-webapp in our examples below ,Replace webapp with the name of your generator
   for the same result.
+
 ```js
 yo webapp
 ```
+
   Easily access a generator's home page by running:
+
 ```js
 npm home generator-webapp
 ```
+
   Yo else provide the following commands:
+
 ```shell
 yo --help // access the full help screen
 yo --generators // list every installed generators
@@ -113,6 +120,7 @@ yo --version  // get the version
 ```
 
 ## 接收用户输入
+
 ```js
 prompting() {
   return this.prompt([
@@ -140,6 +148,8 @@ prompting() {
   cspell
   commitlint
   husky
+  markdownlint
+  prettier
 
 [husky](https://typicode.github.io/husky/zh/get-started.html)
 

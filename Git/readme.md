@@ -16,7 +16,7 @@ git add <filename>  # 添加指定文件到暂存区
 git add .           # 添加所有更改到暂存区
 ```
 
-3. 本地仓库
+1. 本地仓库
   本地仓库是一个隐藏在.git目录中的数据库, 用于存储项目的所有提交历史记录。每次提交更改时, Git会将暂存区中的内容保存到本地仓库中。
 
 ```shell
@@ -53,6 +53,13 @@ git clone https://xxx.git <directory>
 1. Add file contents to the index. The 'index' holds a snapshot of the content of the working tree, and it is this snapshot that is taken as the contents of the next commit.
 2. This command can be performed multiple times before a commit.
 3. The **git add** command will not add ignored files by default.
+
+```shell
+git add .       # 暂存所有文件
+git add <file>  # 暂存指定文件
+git add -p      # 逐块选择要暂存的更改。
+  # y:暂存当前块 / n：跳过当前块  / q: 退出暂存
+```
 
   git-status  Show the working tree status.
   obtain a summary of which files have changes that are staged for the next commit.
@@ -93,7 +100,7 @@ git reset --soft HEAD~2        # 回退所有内容到 上上一个版本
 
 ```
 
-2. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
+1. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
 
   git-rm        Remove files from the working tree and from the index. **git rm** will not remove a file from just your working directory.
 
@@ -116,6 +123,7 @@ git branch -a # 查看本地和远程分支
 git branch -r # 查看远程分支
 git merge <branch-name> # 将其他分支内容合并到当前分支
 ```
+
   合并过程中出现冲突时, Git会标记冲突文件, 需要手动解决冲突。
 
   git-checkout  Switch branches or restore working tree files
@@ -163,6 +171,15 @@ git log -n 5      # 限制显示的提交数(最近5次提交记录)
 4. clear: Remove all the stash entries.
 5. drop:  Remove a single stash entry from the list of stash entries.
 
+```shell
+git stash
+git stash list
+git stash apply # 应用最近一次存储的进度
+git stash pop
+git stash drop stash@{n}  # 删除特定存储
+git stash clear
+```
+
   git-fetch
   Download objects and refs from another repository
 
@@ -203,6 +220,29 @@ used by argument-less **git-pull** and other commands.
 
   git-gc
   Cleanup unnecessary files and optimize the local repository
+
+  git-tag
+  Create, list, delete, or verify a tag object signed with GPG.
+  Add a tag reference in *refs/tags/*, unless *-d/-l/-v* is given to delete, list or verify tags.
+  通常用于发布版本(v.1.1.0)
+
+```shell
+git tag v1.0
+git tag -a v1.0
+git tag -a v1.0 -m 'message' # 额外元数据
+
+
+# 推送标签到远程仓库
+git push origin v1.0
+
+# 推送所有标签
+git push origin --tags
+
+# 删除本地标签
+git tag -d v1.0
+# 删除远程标签
+git push origin --delete v1.0
+```
 
 ## gitignore
 
