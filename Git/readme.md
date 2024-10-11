@@ -81,9 +81,16 @@ git diff           # 查看工作区和暂存区之间的差异
 are discarded.
 
 ```shell
-git reset
-git reset --mixed(默认)         # 暂存区重置, 工作目录保持不变
-git reset --hard  # 暂存区和工作目录都重置
+git reset HEAD                  # 取消已缓存的内容
+git reset --mixed(默认)         # 暂存区重置, 工作目录保持不变 (重置git add操作)
+git reset --hard HEAD           # 暂存区和工作目录都重置 (删除之前所有的提交信息, 谨慎使用)
+
+git reset HEAD^                # 回退 所有内容到上一个版本
+git reset HEAD^ hello.js       # 回退 hello.js 文件版本到上一个版本
+
+git reset --soft HEAD^^
+git reset --soft HEAD~2        # 回退所有内容到 上上一个版本
+
 ```
 
 2. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
