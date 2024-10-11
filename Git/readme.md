@@ -298,3 +298,6 @@ anywhere.
 ### pre-auto-gc
 
   This hook is invoked by **git gc --auto**
+
+  console.log('我是主分支代码')
+  
