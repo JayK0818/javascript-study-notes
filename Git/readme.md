@@ -82,6 +82,12 @@ git diff           # 查看工作区和暂存区之间的差异
   --staged: 恢复暂存区中的内容到工作区
   --worktree: 恢复工作区中的文件内容到当前工作去状态
 
+```shell
+git commit -a # 如果觉得 git add 提交缓存的流程太繁琐
+
+git commit -am 'feat: xxx'
+```
+
   git-reset     Reset current HEAD to the specified state.
 
 1. git-reset --hard:  Resets the index and working tree. Any changes to tracked files in the working tree since commit
