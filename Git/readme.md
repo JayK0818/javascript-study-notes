@@ -109,7 +109,7 @@ git reset --soft HEAD~2        # 回退所有内容到 上上一个版本
 # git commit -m 'docs: git-test-2'
 
 # git reset --soft HEAD~1
-# git push    此时只会提交 git-test-1的内容, 并且第二次 git commit的内容会被退回到暂存区, 需要重新git add
+# git push    此时只会提交 git-test-1的内容, 并且第二次 git commit的内容会被退回到暂存区, 需要重新git commit
 ```
 
 
