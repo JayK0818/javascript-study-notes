@@ -99,7 +99,19 @@ git reset --soft               # 用户回退到某个版本 (回退到指定的
 git reset --soft HEAD^^
 git reset --soft HEAD~2        # 回退所有内容到 上上一个版本
 
+
+# a.txt   Hello World
+# git add .
+# git commit -m 'docs: git-test-1'
+
+# a.txt Hello World 你好世界
+# git add .
+# git commit -m 'docs: git-test-2'
+
+# git reset --soft HEAD~1
+# git push    此时只会提交 git-test-1的内容, 并且第二次 git commit的内容会被退回到暂存区, 需要重新git add
 ```
+
 
 1. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
 
