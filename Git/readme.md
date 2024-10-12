@@ -44,7 +44,7 @@ ssh-keygen -t rsa -b 4096 -C 'XXX.email@emial.com'
   git-clone   Clone a repository into a new directory
 
 ```shell
-git clone https://xxx.git <directory>
+git clone https://xxx.git directory
 # 克隆到指定文件夹
 ```
 
