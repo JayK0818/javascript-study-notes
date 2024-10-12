@@ -112,7 +112,6 @@ git reset --soft HEAD~2        # 回退所有内容到 上上一个版本
 # git push    此时只会提交 git-test-1的内容, 并且第二次 git commit的内容会被退回到暂存区, 需要重新git commit
 ```
 
-
 1. git reset HEAD 暂存区的目录树会被重写, 工作区不受影响。
 
   git-rm        Remove files from the working tree and from the index. **git rm** will not remove a file from just your working directory.
@@ -298,6 +297,3 @@ anywhere.
 ### pre-auto-gc
 
   This hook is invoked by **git gc --auto**
-
-  console.log('我是主分支代码')
-  
