@@ -95,6 +95,7 @@ git reset --hard HEAD           # 暂存区和工作目录都重置 (删除之�
 git reset HEAD^                # 回退 所有内容到上一个版本 (撤销git add 和 git commit)
 git reset HEAD^ hello.js       # 回退 hello.js 文件版本到上一个版本
 
+git reset --soft               # 用户回退到某个版本 (回退到指定的git commit处)
 git reset --soft HEAD^^
 git reset --soft HEAD~2        # 回退所有内容到 上上一个版本
 
@@ -154,7 +155,7 @@ git merge new-feature
   git log
   Show commit logs
 
-  git blame <file> 以列表形式查看指定文件的历史修改记录
+  git blame file 以列表形式查看指定文件的历史修改记录
 
 ```shell
 git log --oneline #以简洁的一行格式显示提交信息
@@ -285,5 +286,3 @@ anywhere.
 ### pre-auto-gc
 
   This hook is invoked by **git gc --auto**
-
-  我是开发分支代码
