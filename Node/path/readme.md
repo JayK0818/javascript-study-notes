@@ -60,6 +60,4 @@ console.log(path.join('./', 'src', 'main.js'))  //    src/main.js
 
   The **path.resolve()** method resolves a sequence of paths or path segments into an absolute path.
 
-```js
-
-```
+  If no path segments are passed, path.resolve() will return the absolute path of the current working directory.
