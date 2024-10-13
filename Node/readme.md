@@ -2,6 +2,28 @@
 
    Natives modules ---> Node C/C++ Bindings -----> v8 libuv dns http parser zlib(compression) ...
 
+   单线程 异步非阻塞IO 配合事件回调通知(主线程是单线程)
+
+```js
+const http = require('http')
+const sleep = (time) => {
+   const t = Date.now() + time * 1000
+   while (Date.now() < t) {}
+   return
+}
+
+sleep(10)   // 需要等待此函数执行完毕
+const server = http.createServer((req, res) => {
+   // ...
+})
+server.listen(3000, () => {
+})
+```
+
+   应用场景：
+   IO密集型高并发请求
+   实时聊天
+
    v8: 执行js代码
    Libuv: 事件循环,事件队列,异步IO
 

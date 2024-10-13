@@ -3,7 +3,7 @@
   复杂程序 -- 拆分成不同具有原子功能的模块
   单一模块内部的方法 应该是私有的, 向外部提供定义好的方法以及属性等
 
-1. 全局模式
+## 全局模式
 
 ```js
 // 全局污染
@@ -13,7 +13,7 @@ window.fn2 = function () {
 }
 ```
 
-2. namespace
+## namespace
 
 ```js
 const module_a = {
@@ -23,7 +23,7 @@ const module_a = {
 module_a.message = '你好 世界'
 ```
 
-3. IIFE
+## IIFE
 
 ```js
 (function () {
@@ -41,7 +41,7 @@ module_a.message = '你好 世界'
 // 不同模块引入顺序不能颠倒
 ```
 
-4. CommonJS
+## CommonJS
 
   模块同步加载执行
   4.1 代码都是在模块内部执行
@@ -49,29 +49,31 @@ module_a.message = '你好 世界'
   4.3 同步加载
   4.4 输出值的复制
 
-5. browserify
+## browserify
 
 **require('modules')** in the browser
 Use a node-style *require()* to organize your browser code
 
 [Browserify](https://www.npmmirror.com/package/browserify)
 
-6. AMD/CMD
+## AMD / CMD
+
   async module definition
   AMD: 依赖前置
   CMD: 就近依赖
 
   commonjs + AMD
 
-7. ESM
+## ESM
 
   Commonjs 输出值的复制, ESM输出值的引用
   Commonjs 是运行时加载, ESM是编译时输出
 
-8. UMD
+## UMD
 
   universal module definition
   所有格式打包
+
 ```js
 (function () {
   if (typeof module === 'object' && typeof module.exports === 'object') {
@@ -83,14 +85,13 @@ Use a node-style *require()* to organize your browser code
   }
 })()
 ```
-# 包管理工具
 
-
-# Installing yo and some generators
+## Installing yo and some generators
 
 ```shell
 npm install -g yo
 ```
+
   Generators are npm packages named generator-XYZ.
   for example To install the webapp generator:
 
@@ -162,3 +163,22 @@ prompting() {
 ## CI/CD
 
   阿里云效
+
+## 前端性能监控
+
+  收集错误:
+  JS异常
+    unhandledrejection (未处理的Promise rejection 信息)
+    onerror
+  接口异常:
+    xhr / fetch
+  资源异常
+  页面性能
+
+  行为收集
+  DOM 事件
+  hashchange
+  historychange
+
+  主流框架收集异常
+    React: componentDidCatch ()
