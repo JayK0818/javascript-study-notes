@@ -113,3 +113,92 @@ const read = async () => {
 }
 read()
 ```
+
+## readFile(path, options)
+
+  阅读一个文件的全部内容
+
+  If no encoding is specified, the data is returned as a Buffer object. Otherwise the data will be a string.
+
+```js
+const file_path = path.join(__dirname, 'data.txt')
+// 传递encoding
+fs_promise.readFile(file_path, {
+  encoding: 'utf-8'
+})
+  .then(res => {
+    console.log(res)
+    // 床前明月光,疑是地上霜。举头望明月,低头思故乡！
+  })
+// 未传递encoding
+fs_promise.readFile(file_path)
+  .then(res => {
+    console.log(res)
+    // <Buffer e5 ba 8a e5 89 8d e6 98 880 82 e4...>
+  })
+```
+
+## writeFile(file, data, options)
+
+  Asynchronously writes data to a file, replacing the file if it already exists.
+  data can be a string, a buffer...
+  The encoding option is ignored if **data** is buffer.
+
+```js
+const file_path = path.join(__dirname, 'hello.txt')
+// 写入buffer
+fs_promise.writeFile(file_path, Buffer.from('hello world'))
+
+// 写入字符串
+fs_promise.writeFile(file_path, '你好世界', {
+  encoding: 'utf8'
+})
+```
+
+## unlink(path)
+
+  删除文件
+
+```js
+const file_path = path.join(__dirname, 'hello.txt')
+fs_promise.unlink(file_path)
+```
+
+## fs.stat(path)
+
+```js
+const file_path = path.join(__dirname, 'data.txt')
+fs_promise.stat(file_path)
+  .then(res => {
+    console.log('stat:', res)
+    console.log('isFile', res.isFile()) // true
+    console.log('isDirectory', res.isDirectory()) // false
+  })
+/**
+ * stat: Stats {
+    dev: 16777233,
+    mode: 33188,
+    nlink: 1,
+    uid: 501,
+    gid: 20,
+    rdev: 0,
+    blksize: 4096,
+    ino: 21709338,
+    size: 406,
+    blocks: 8,
+    atimeMs: 1728911478655.9202,
+    mtimeMs: 1728911477429.0437,
+    ctimeMs: 1728911477429.0437,
+    birthtimeMs: 1728824307589.6729,
+    atime: 2024-10-14T13:11:18.656Z,
+    mtime: 2024-10-14T13:11:17.429Z,
+    ctime: 2024-10-14T13:11:17.429Z,
+    birthtime: 2024-10-13T12:58:27.590Z
+  }
+  * 
+*/
+```
+
+[marked](https://www.npmmirror.com/package/marked)
+
+[file-system-flags](https://nodejs.org/docs/latest/api/fs.html#file-system-flags)
