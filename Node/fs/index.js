@@ -101,9 +101,9 @@ fs-promise <Buffer e5 ba 8a e5 89 8d e6 98 8e e6 9c 88 e5 85 89 2c e7 96 91 e6 9
     /**
      * 
      * file: data.txt
-file: hello.txt
-file: index.js
-file: readme.md
+      file: hello.txt
+      file: index.js
+      file: readme.md
     */
   }
   read()
@@ -239,4 +239,35 @@ file: readme.md
   }
   read()
   write()
+});
+
+// ------------ 创建多层级文件夹 --------------
+(function () {
+  fs_promise.mkdir(path.join(__dirname, 'a/b/c/c'), {
+    recursive: true // 递归的创建文件夹
+  })
+    .then(res => {
+      console.log('创建成功')
+    })
+    .catch((err) => {
+    console.log(err)
+  })
+});
+
+// ---------------- 删除多层级文件夹 ---------------
+(function () {
+  fs.rm(path.join(__dirname, 'a'), {
+    recursive: true
+  })
+});
+
+// ----------- 重命名 --------------
+(function () {
+  fs.rename(
+    path.join(__dirname, 'message.txt'),
+    path.join(__dirname, 'msg.txt'),
+    (err, data) => {
+      console.log('文件名更改成功', data)
+    }
+  )
 })();

@@ -164,6 +164,16 @@ const file_path = path.join(__dirname, 'hello.txt')
 fs_promise.unlink(file_path)
 ```
 
+## fs.rm(path, options, callback)
+
+  Asynchronously removes files and directories
+
+```js
+fs.rm(path.join(__dirname, 'a'), {
+  recursive: true
+})
+```
+
 ## fs.stat(path)
 
 ```js
@@ -197,6 +207,20 @@ fs_promise.stat(file_path)
   }
   * 
 */
+```
+
+## fs.rename(oldPath, newPath, callback)
+
+  Asynchronously rename file at **oldPath** to the pathname provided as **newPath**.
+
+```js
+fs.rename(
+  path.join(__dirname, 'message.txt'),
+  path.join(__dirname, 'msg.txt'),
+  (err, data) => {
+    console.log('文件名更改成功', data)
+  }
+)
 ```
 
 [marked](https://www.npmmirror.com/package/marked)
