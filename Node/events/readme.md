@@ -8,6 +8,24 @@
   
   All objects that emit events are instances of the *EventEmitter* class.
 
+  The *EventEmitter* class is defined and exposed by the *node:events* module.
+  The *EventEmitter* instance will emit it's own *newListener* event before a listener is added to its internal array of listeners.
+  DOM *EventTarget* instances may be hierarchical, there is no concept of hierarchy and event propagation in Node.js.
+
+```js
+const emitter = new EventEmitter();
+emitter.once('newListener', (event, listener) => {
+  if (event === 'update') {
+    console.log(listener.toString())
+    emitter.on('update', listener)
+  }
+})
+emitter.on('update', () => {
+  console.log('A')
+})
+emitter.emit('update')  // 输出两次 A
+```
+
 ```js
 const EventEmitter = reqire('node:events')
 
@@ -71,3 +89,23 @@ emitter.on('update', () => {
 
 emitter.emit('update')
 ```
+
+  emitter.eventNames()
+  emitter.getMaxListeners() / emitter.setMaxListeners(n)
+  emitter.off(eventName, listener)
+  emitter.on(eventName, listener)
+  emitter.prependListener(): add the event listener to the beginning of the listeners array.
+  emitter.removeAllListeners(eventName)
+  emitter.removeListener(eventName, listener)
+
+  事件循环:
+
+- timers: 执行setTimeout 和 setInterval
+- pending callbacks: 执行系统操作的回调, 例如 tcp udp
+- idle, prepare: 只在系统内部执行
+- poll: 执行与I/O相关回调
+- check: 执行setImmediate中的回调
+- close callback: 执行close事件中的回调
+
+  浏览器只有两个任务队列, Node.js中有六个任务队列
+  NodeJs中 process.nextTick 优先于 Promise.then()
