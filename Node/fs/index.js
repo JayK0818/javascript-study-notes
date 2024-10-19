@@ -184,7 +184,7 @@ fs-promise <Buffer e5 ba 8a e5 89 8d e6 98 8e e6 9c 88 e5 85 89 2c e7 96 91 e6 9
     encoding: 'utf8',
     flag: 'a'
   })
-})();
+});
 
 // --------------- open / close -------------
 (function () {
@@ -217,7 +217,7 @@ fs-promise <Buffer e5 ba 8a e5 89 8d e6 98 8e e6 9c 88 e5 85 89 2c e7 96 91 e6 9
     }
   }
   open_file()
-})();
+});
 
 // ------------------- read / write -------------------
 (function () {
@@ -270,4 +270,6 @@ fs-promise <Buffer e5 ba 8a e5 89 8d e6 98 8e e6 9c 88 e5 85 89 2c e7 96 91 e6 9
       console.log('文件名更改成功', data)
     }
   )
-})();
+});
+
+// -------------- 文件可读流 ---------------

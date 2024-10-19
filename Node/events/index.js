@@ -1,4 +1,6 @@
 const EventEmitter = require('node:events');
+const fs = require('node:fs');
+const path = require('node:path');
 
 (function () {
   const emitter = new EventEmitter()
@@ -110,4 +112,28 @@ const EventEmitter = require('node:events');
   })
   console.log('end')
   // start - end - nextTick - promise - setTimeout - setImmediate1 setImmediate2
+});
+
+// ----------- setTimeout / setImmediate --------------
+(function () {
+  setTimeout(() => {
+    console.log('setTimeout');
+  }, 0);
+  setImmediate(() => {
+    console.log('setImmediate');
+  });
+  // 执行顺序 不一致
+});
+
+// ------------ setTimeout 与 setImmediate 在异步回调函数 里 --------------
+(function () {
+  fs.readFile(path.resolve(__dirname, 'readme.md'), () => {
+    setTimeout(() => {
+      console.log('setTimeout')
+    }, 0);
+    setImmediate(() => {
+      console.log('setImmediate')
+    })
+  });
+  //  先输出 setImmediate, 后输出 setTimeout.
 })();

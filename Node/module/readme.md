@@ -25,6 +25,11 @@ value of 'commonjs'
 - The file has **.js** extension, and the closest package.json contains "type": "module"
 - The file has a **.js** extension, the closest package,json dose not contain "type": "commonjs", and the module contains eS module syntax.
 - A file extension must be provided when using the import keyword to resolve relative or absolute specifiers
+- *import* statements are permitted only in ES modules, but dynamic *import()* expressions are supported in Commonjs
+for loading ES modules.
+
+- No default extensions
+- No folder mains
 
   data:URLs are supported
 

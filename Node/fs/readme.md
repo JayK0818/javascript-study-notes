@@ -223,6 +223,18 @@ fs.rename(
 )
 ```
 
+## fs.createReadStream(path, options)
+
+  options:
+    flags
+    encoding: default null.
+    mode: default 0o666
+    start
+    end
+    highWaterMark default 64 * 1024
+
+## fs.createWriteStream(path, options)
+
 [marked](https://www.npmmirror.com/package/marked)
 
 [file-system-flags](https://nodejs.org/docs/latest/api/fs.html#file-system-flags)

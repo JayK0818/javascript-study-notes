@@ -1,48 +1,80 @@
-const fs = require('fs')
-const zlib = require('zlib')
-const readStream = fs.createReadStream('./data/iu.webp')
-const writeStream = fs.createWriteStream('./data/copy.webp')
-readStream.setEncoding('binary')
+const http = require('node:http');
+const stream = require('node:stream/promises');
+const path = require('path');
+const fs = require('node:fs');
 
-const chunks = []
-let data = ''
-
-readStream.on('data', chunk => {
-  chunks.push(chunk)
-  data += chunk
-})
-readStream.on('end', function() {
-  writeStream.write(data, 'binary')
-  // console.log(chunks)
-  // writeStream.write(Buffer.concat(chunks), 'binary')
-  writeStream.end()
-  writeStream.on('finish', () => {
-    console.log('写入完成')
+(function () {
+  const server = http.createServer(function (req, res) {
+    let body = '';
+    // req.setEncoding('utf8');
+    req.on('data', (chunk) => {
+      body += chunk;
+    })
+    req.on('end', () => {
+      try {
+        console.log('data', body);
+        res.write('success')
+        res.end()
+      } catch (err) {
+        console.log('err', err)
+      }
+    })
+  });
+  server.listen(3337, () => {
+    console.log('app starting at port 3337');
   })
-})
+});
 
+// --------------- readStream -------------
+(function () {
+  const read = async () => {
+    const rs = fs.createReadStream(path.join(__dirname, 'readme.md'))
+    rs.pipe(process.stdout)
+    // process.stdout 可写流
+  };
+  read()
+});
 
-const string_chunk_array = []
-const fileReadStream = fs.createReadStream('./data/input.txt')
-const fileWriteStream = fs.createWriteStream('./data/output.txt', {
-  flags: 'a'
-})
-fileReadStream.on('data', (chunk) => {
-  string_chunk_array.push(chunk)
-})
-fileReadStream.on('end', () => {
-  console.log(Buffer.concat(string_chunk_array).toString())
-  // 写入流
-  fileWriteStream.write(Buffer.concat(string_chunk_array))
-})
+// --------- readable event -------------
+(function () {
+  const rr = fs.createReadStream(path.join(__dirname, 'readme.md'));
+  rr.on('readable', () => {
+    console.log('readable')
+    const result = rr.read();
+    console.log('result:', result)
+  });
+  rr.on('data', (chunk) => {
+    console.log('chunk', chunk)
+  })
+  rr.on('end', () => {
+    console.log('end')
+  })
+});
 
+// -------------- resume() --------------
+(function () {
+  const rr = fs.createReadStream(path.join(__dirname, 'readme.md'), {
+    highWaterMark: 300
+  });
+  rr.on('data', chunk => {
+    console.log(`received ${chunk.length} bytes of data`);
+    rr.pause();
+    setTimeout(() => {
+      rr.resume();
+    }, 1000);
+  })
+  rr.read()
+});
 
-fs.appendFile('./data/output.txt', '我是追加的内容', err => {
-  if(err) console.log('error', err)
-  console.log('追加成功')
-})
-
-// ----------- 管道流 -----------
-const pipeReadStream = fs.createReadStream('./data/iu.webp')
-pipeReadStream.pipe(fs.createWriteStream('./data/pipe.webp'))
-pipeReadStream.pipe(zlib.createGzip()).pipe(fs.createWriteStream('./data/pipe.webp.gz'))
+// --------------- 写入流 ----------------
+(function () {
+  const readStream = fs.createReadStream(path.join(__dirname, 'readme.md'));
+  const writeStream = fs.createWriteStream(path.join(__dirname, 'copy.md'));
+  readStream.on('data', (chunk) => {
+    writeStream.write(chunk)
+  });
+  readStream.on('end', () => {
+    console.log('end...')
+  })
+  // readStream.pipe(writeStream)
+})();
