@@ -17,7 +17,7 @@ const storage = asyncLocalStorage()
 console.log(storage.getStore()) // returns the current store.
 ```
 
-2. run(store, callback)
+1. run(store, callback)
 
 ```js
 const store = { message: 'hello world' }
