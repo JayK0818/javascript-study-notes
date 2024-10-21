@@ -1,5 +1,16 @@
 # Node.js
 
+## Install
+
+   We strongly recommend using a Node version manager like **nvm** to install Node.js and npm. We do not recommend using
+   a Node installer, since the Node installation process installs npm in a directory with local permissions and can cause
+   permissions errors when you run npm packages globally.
+
+```shell
+node -v
+npm -v
+```
+
    Natives modules ---> Node C/C++ Bindings -----> v8 libuv dns http parser zlib(compression) ...
 
    单线程 异步非阻塞IO 配合事件回调通知(主线程是单线程)
