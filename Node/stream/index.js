@@ -152,4 +152,43 @@ const fs = require('node:fs');
 /*   ws.end('追加的内容', () => {
     console.log('ws-end', ws.writableEnded)
   }); */
+});
+
+// ------------ ws.write() --------------
+(function () {
+  const ws = fs.createWriteStream(path.join(__dirname, 'rm.md'), {
+    highWaterMark: 3
+  });
+  let flag = ws.write('1')
+  console.log('flag', flag);  // true
+  flag = ws.write('2')
+  console.log('flag', flag);  // true
+  flag = ws.write('3')
+  console.log('flag', flag);  // false
+  ws.on('drain', () => {
+    console.log('drain')
+  });
+});
+
+// 背压机制
+(function () {
+  const rs = fs.createReadStream(path.join(__dirname, 'readme.md'), {
+    highWaterMark: 20
+  });
+  const ws = fs.createWriteStream(path.join(__dirname, 'rm.md'), {
+    highWaterMark: 40
+  });
+
+  let flag = true
+  rs.on('data', (chunk) => {
+    flag = ws.write(chunk, () => {
+      console.log('写完了1')
+    })
+    if (!flag) {
+      rs.pause()
+    }
+  });
+  ws.on('drain', () => {
+    rs.resume()
+  })
 })();
