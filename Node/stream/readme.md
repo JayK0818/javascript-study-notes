@@ -24,7 +24,7 @@
 
   Data is buffered in Readable streams when the implementation call *stream.push(chunk)*. If the consumer of the Stream dose not call *stream.read()*, the data will sit in the internal queue until it is consumed.
 
-  Data is buffered in *Writable* streams when the *wrieable.write(chunk)* method is called repeatedly. While the total size of the internal write buffer is below the threshold set by *highWaterMark*, calls to writable.write() will return true. Once the size of the internal buffer reaches or exceeds the *highWaterMark*, *false* will be returned.
+  Data is buffered in *Writable* streams when the *writeable.write(chunk)* method is called repeatedly. While the total size of the internal write buffer is below the threshold set by *highWaterMark*, calls to writable.write() will return true. Once the size of the internal buffer reaches or exceeds the *highWaterMark*, *false* will be returned.
 
 ```js
 const stream = require('node:stream/promises') // 引入promise版本的 stream
@@ -51,7 +51,7 @@ server.listen(3337, () => {
 })
 ```
 
-## Readable strems
+## Readable streams
 
   Readable streams are an abstraction for a source from which data is consumed.
 
@@ -77,7 +77,7 @@ rr.on('end', () => {
   **readable.pipe()** **readable.resume()** 或者 **readable.read()** 方式会导致 'data' 事件触发。
   Or by attaching a listener callback to the 'data' event.
   Attaching a 'data' event listener to a stream that has not been explicitly paused will switch the stream into
-  flowing mode. Data will then be passed as soon as it is avaliable.
+  flowing mode. Data will then be passed as soon as it is available.
 
   The **readable** event is emitted when there is data available to be read from the stream. up to the configured high
   water mark
@@ -85,7 +85,7 @@ rr.on('end', () => {
   In some cases, attaching a listener for the 'readable' event will cause some amount of data to be read into an
   internal buffer.
 
-  In general, the **reabable.pipe()** and 'data' event mechanisms are easier to understand than the 'readable' event.
+  In general, the **readable.pipe()** and 'data' event mechanisms are easier to understand than the 'readable' event.
 
 ```js
 const rr = fs.createReadStream(path.join(__dirname, 'readme.md'), {
@@ -130,13 +130,13 @@ r.pipe(z).pipe(w);
 
 ## API from stream implementers
 
-  Declare a new JavaScript class that extends one of the four basic stream classes (strem.Writable, stream.Readable,
+  Declare a new JavaScript class that extends one of the four basic stream classes (stream.Writable, stream.Readable,
   stream.Duplex or stream.Transform).
 
 ```js
 const { Writable } = require('node:stream')
 class MyWritable extends Writable {
-  construtor() {
+  constructor() {
     super()
   }
   // ...
