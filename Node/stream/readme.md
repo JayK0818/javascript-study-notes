@@ -26,6 +26,25 @@
 
   Data is buffered in *Writable* streams when the *writeable.write(chunk)* method is called repeatedly. While the total size of the internal write buffer is below the threshold set by *highWaterMark*, calls to writable.write() will return true. Once the size of the internal buffer reaches or exceeds the *highWaterMark*, *false* will be returned.
 
+## pipeline()
+
+  stream.pipeline(source, transforms, destination)
+
+```js
+const { pipeline } = require('node:stream/promises');
+const fs = require('node:fs');
+const zlib = require('node:zlib');
+
+async function run() {
+  await pipeline(
+    fs.createReadStream('archive.tar'),
+    zlib.createGzip(),
+    fs.createWriteStream('archive.tar.gz'),
+  );
+  console.log('Pipeline succeeded.');
+}
+```
+
 ```js
 const stream = require('node:stream/promises') // 引入promise版本的 stream
 

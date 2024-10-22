@@ -2,8 +2,8 @@
 
     使用命名空间,减少全局变量的使用。
     var namespace = {
-    	a:function(){console.log(1)},
-    	b:function(){consooe.log(2)}
+     a:function(){console.log(1)},
+     b:function(){console.log(2)}
     }
 
 # 内置类型
@@ -37,7 +37,6 @@ console.log(typeof b); // undefined
         1. 使用delete可以删除数组中的某项,但不会改变数组的长度.
         2. JavaScript中字符串是不可变的，而数组是可变的。字符串不可变是值字符串的成员函数不会改变其原始值，而是创建
         一个新的字符串。
-
 
 ## Number
 
@@ -185,57 +184,59 @@ bar(d);
 console.log("d:", d); // [4,5,6,7]
 ```
 
-    我们无法自行决定使用值复制还是引用复制，一切由值的类型来决定。
+我们无法自行决定使用值复制还是引用复制，一切由值的类型来决定。
 
 # 算法
 
-	复杂度: 往往会忽略常量,低阶,系数等对增长趋势不产生决定影响的因子。
-	1. 时间
-	2. 空间
+复杂度: 往往会忽略常量,低阶,系数等对增长趋势不产生决定影响的因子。
 
-	时间复杂度 O: 时间复杂度的表示法
-	O(n)	n: 表示的数据规模
+1. 时间
+2. 空间
+
+时间复杂度 O: 时间复杂度的表示法
+O(n) n: 表示的数据规模
 
 时间复杂度分析:
-1. 只关注循环执行次数最多的那一段代码
-```js
-function fn () {
-  for (let i = 0; i < 100; i++) {
 
-  }
+1. 只关注循环执行次数最多的那一段代码
+
+```js
+function fn() {
+  for (let i = 0; i < 100; i++) {}
 }
 // O(n)
 ```
+
 2. 总复杂度等于量级最大的那段代码复杂度
+
 ```js
-function fn () {
-  for (let i = 0; i < 100; i++) {
-  }
-  for (let j = 0; j<100; j++) {
-    for (let k = 0; k < 100; k++) {
-    }
+function fn() {
+  for (let i = 0; i < 100; i++) {}
+  for (let j = 0; j < 100; j++) {
+    for (let k = 0; k < 100; k++) {}
   }
 }
 // O(n^2)
 ```
+
 3. 嵌套代码的复杂度等于嵌套内外代码复杂度的乘积
 
 ```js
-function f (n) {
-  let sum = 0
+function f(n) {
+  let sum = 0;
   for (let i = 0; i < 1000; i++) {
-    sum += m(i)
+    sum += m(i);
   }
 }
 
 function m(n) {
-  for (let i = 0; i <= n; i++) {
-  }
+  for (let i = 0; i <= n; i++) {}
 }
 // O(n * n)
 ```
 
 4. 多个循环规模求加法
+
 ```js
 function fn(m, n) {
   for (let i = 0; i < m; i++) {
@@ -247,6 +248,7 @@ function fn(m, n) {
 }
 // O(m + n)
 ```
+
 5. 多个规模求乘法
 
 ```js
@@ -263,29 +265,31 @@ function f1(m, n) {
 ## 常用时间复杂度
 
 1. 多项式阶
-O(1)
-O(logn)
-O(n)
-O(nlogn)
-O(n^2)
-O(n^3)
+   O(1)
+   O(logn)
+   O(n)
+   O(nlogn)
+   O(n^2)
+   O(n^3)
 
 2. 对数阶
+
 ```js
 function m1(n) {
-  let i = 1
+  let i = 1;
   while (i < n) {
-    i *= 2
+    i *= 2;
   }
 }
 ```
+
 3. 非多项式阶
 
 ```js
 // O(2^n)
 function m(n) {
-  if (n <= 1)  {
-    return 1
+  if (n <= 1) {
+    return 1;
   }
   return m(n - 1) + m(n - 2);
 }
@@ -293,4 +297,4 @@ function m(n) {
 
 ## 链表
 
-  类型: 单向链表 / 双向链表
+类型: 单向链表 / 双向链表
