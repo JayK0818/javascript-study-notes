@@ -173,24 +173,26 @@ const fs = require('node:fs');
 // 背压机制
 (function () {
   const rs = fs.createReadStream(path.join(__dirname, 'readme.md'), {
-    highWaterMark: 10
+    highWaterMark: 5
   });
   const ws = fs.createWriteStream(path.join(__dirname, 'rm.md'), {
-    highWaterMark: 100
+    highWaterMark: 3
   });
 
   let flag = true
   rs.on('data', (chunk) => {
     // 第一次调用write方法时将数据直接写入到文件中
     // 第二次调用write时将数据写入缓存中
-    flag = ws.write(chunk, () => {
-      console.log('写完了1')
-    })
-    if (!flag) {
-      rs.pause()
-    }
+    // flag = ws.write(chunk, () => {
+    //   console.log('flag', flag, chunk.toString())
+    // })
+    // if (!flag) {
+    //   rs.pause()
+    // }
+    ws.write(chunk)
   });
   ws.on('drain', () => {
+    // console.log('--------drain------')
     // rs.resume()
   })
 })();

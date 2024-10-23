@@ -169,7 +169,7 @@ class MyWritable extends Writable {
 
   The return value is *true* if the internal buffer is less than the *highWaterMark* configured when the stream was
   created after admitting *chunk*.
-  if *false* is returned, futher attempts to write data to the stream should stop until the 'drain' event is emitted.
+  if *false* is returned, further attempts to write data to the stream should stop until the 'drain' event is emitted.
 
 ```js
 

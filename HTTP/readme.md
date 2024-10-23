@@ -44,7 +44,7 @@
 
 ## URI/URL
 
-  URI (Uniform Resource Identifier) 
+  URI (Uniform Resource Identifier)
   URI就是由某个协议方案表示的资源的定位标识符。协议方案是指访问资源所使用的协议类型名称。
 
   Uniform: 规定统一的格式可方便处理多种不同类型的资源, 而不用根据上下文环境来识别资源指定的访问方式
@@ -58,9 +58,10 @@
 
 ## MIME类型
 
-  媒体类型(Multipurpost Internet Mail Extensions)是一种标准，用来表示文档,文件或字节流的性质和格式。
+  媒体类型(Multipurpose Internet Mail Extensions)是一种标准，用来表示文档,文件或字节流的性质和格式。
   语法:
     type/subtype
+
 1. text/plain
 2. text/html
 3. image/jpeg
@@ -81,17 +82,20 @@
 ### HTTP请求
 
   HTTP请求是由客户端发出的消息,用来使服务器执行动作。 HTTP请求和响应具有相似的结构。
+
 1. 一行起始行用于描述要执行的请求,或者是对应的状态,成功或失败, 这个起始行总是单行的。
 2. 一个可选的HTTP标头集合指明请求或描述消息主体。
 3. 一个空行指示所有关于请求的元数据已经发送完毕。
 4. 一个可选的包含请求相关数据的主体,或者响应相关的文档。主体的大小由起始行的HTTP头来指定。
   
   起始行包含三个元素:
+
 1. 一个HTTP方法 (GET/POST等)
 2. 请求目标
 3. HTTP版本(HTTP version)
 
   标头(Header)
+
 1. 通用标头(General header) 指代同时适用于请求和响应的消息。
 2. 请求标头(Request header)
 3. 表示标头(Representation header)
@@ -110,7 +114,7 @@
 5. POST 方法发送数据给服务器,请求主体的类型由 **Content-Type** 首部指定。PUT方法和POST方法的区别是 PUT方法是幂等的, 连续调用一次
 或者多次调用的效果相同。
   application/x-www-form-urlencoded
-  mutipart/form-data
+  multipart/form-data
   text/plain
 
 ## 状态码
@@ -128,13 +132,14 @@
   404: 服务器无法找到所请求的资源。
   405: 服务器禁止使用当前HTTP方法的请求
 
-5. 5XX: 
+5. 5XX:
     500 Internal Server Error 是表示服务器端错误的响应状态码,意味着所请求的服务器遇到意外的情况并阻止其执行请求。
     502 Bad Gateway 是一种HTTP协议的服务端错误状态码, 它表示作为网关或代理的服务器, 从上游服务器中接收到的响应是无效的。
 
 ## HTTP/1.1 ----- 标准化的协议
 
   HTTP/1.1 消除了大量歧义内容并引入了多项改进:
+
 1. 连接可以复用, 节省了多次打开TCP连接加载网页文档资源的时间。(持久连接: Keep Alive),只要任意一端没有明确提出断开连接, 则保持TCP连接状态。
 2. 增加管线化技术, 允许在第一个应答被完全发送之前就发送第二个请求, 以降低通信延迟。
 3. 支持响应分块。
@@ -168,6 +173,7 @@
 ## 网关
 
   Web网关 在一侧使用HTTP协议, 在另一侧使用另一种协议
+
 1. (HTTP/*) 服务器端Web网关
 2. (HTTP/HTTPS) 服务器端安全网关
 3. (HTTPS/HTTP) 客户端安全加速器网关
@@ -181,12 +187,15 @@
 
   Cache-Control: 请求/响应头, 缓存控制字段
   在 HTTP Caching 标准中, 有两种不同类型的缓存: 私有缓存 和 共享缓存。
+
 1. 私有缓存时绑定到特定客户端的缓存 ---- 通常是浏览器缓存。
+
 ```js
 {
   'Cache-Control': 'private'
 }
 ```
+
   存储的HTTP响应有两种状态: *fresh* 和 *stale*, *fresh* 通常表示响应仍然有效, 可以重复使用。而*stale*状态表示缓存的响应已经过期。
 
   在HTTP/1.0中, 新鲜度过去由Expires标头指定。Expires标头使用明确的时间而不是通过指定经过的时间来指定缓存的生命周期。
@@ -199,6 +208,7 @@
   Vary: 'Accept-Language'
 }
 ```
+
   通过在Vary标头的值中添加 'Accept-Language', 根据语言单独缓存响应。
   如果不希望重复使用响应, 而是希望始终从服务器获取最新内容, 则可以使用 *no-cache* 指令强制验证。*no-cache* 指令不会阻止
   响应的存储, 而是阻止在没有重新验证的情况下重用响应。*no-cache* 指令将强制客户端在重用任何存储的响应之前发送验证请求。
@@ -214,6 +224,7 @@
   在HTTP协议中, **内容协商** 是一种机制, 用于为同一URI提供资源不同的 表示形式。以帮助用户代理指定最合适用户的表示形式。(例如,哪种文档语言/哪种图片格式或者哪种内容编码。)
 
   客户端设置特定的 HTTP 标头 这是进行内容协商的标准方式。
+
 1. Accept: 用来告知(服务器)客户端可以处理的内容类型,这种内容类型用**MIME类型**表示。借助内容协商机制,服务器可以从诸多选项中选择一项进行应用, 并使用**Content-Type**应答头同志客户端它的选择。
 2. Accept-Charset: 客户端可以处理的字符集类型
 3. Accept-Encoding: 客户端可以理解的编码方式-通常是某种压缩算法,服务端在响应头**Content-Encoding**通知客户端该选择
@@ -232,27 +243,33 @@
 
   内容安全策略(CSP)是一个额外的安全层, 用于检测并削弱某些特定类型的攻击。包括跨站脚本(XSS)和数据注入攻击等。
   为使CSP可用, 你需要配置你的网络服务器返回 Content-Security-Policy HTTP标头。 除此之外, <meta> 元素也可以被用来配置该策略
+
 ```html
 <meta
   http-equiv='Content-Security-Policy'
   content="default-src 'self'; img-src https://*; child-src 'none'"
 >
 ```
+
   CSP的主要目标是减少和报告XSS攻击。XSS攻击利用了浏览器对于从服务器获取的内容的信任。
 
   CSP通过指定有效域 - 使服务器管理者有能力减少或消除XSS攻击所依赖的载体。一个CSP兼容的浏览器将会仅从白名单域获取到的脚本文件,忽略所有的其他脚本。
 
   配置内容安全策略涉及到添加 **Content-Security-Policy** HTTP标头到一个页面,并配置相应的值,以控制用户代理 可以为该页面获取哪些资源。策略由一系列 策略指令所组成,每个策略指令都描述了针对某个特定资源的类型以及策略生效的范围。
+
 ```js
 res.writeHead(200, {
   'Content-Security-Policy': 'default-src \'self\''
 })
 ```
+
   default-src:
+
 1. child-src (定义了使用如 frame 和 iframe 等元素在加载web worker和嵌套浏览上下文时的有效来源。)
 2. connect-src
+
   用于限制通过使用脚本接口加载的URL。其中受限制的API如下:
-  2.1 <a>
+  2.1 a标签
   2.2 fetch()
   2.3 XMLHttpRequest()
   2.4 EventSource
@@ -271,7 +288,7 @@ res.writeHead(200, {
   'unsafe-inline': 允许使用内联资源。
   'none': 不允许任何内容
 
-[Content-Security-Plicy](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP)
+[Content-Security-Policy](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP)
 
 ## 重定向
 
@@ -286,14 +303,17 @@ res.writeHead(200, {
   304（Not Modified) 会使页面跳转到本地的缓存副本中.
 
   http重定向机制.
+
 ```html
 <head>
   <meta http-equiv="Refresh" content="0; URL=http://example.com/" />
 </head>
 ```
+
   content属性的值开头是一个数字,指示浏览器在等待该数字表示的秒数之后再进行跳转。
 
   JavaScript重定向机制的原理是设置 **window.location**的属性值,然后加载新的页面。
+
 ```js
 window.location.href = 'http://www.baidu.com'
 ```
@@ -343,7 +363,18 @@ window.location.href = 'http://www.baidu.com'
   预防: 特殊字符替换
 
   CSRF(跨站请求伪造) 诱导用户访问另一个网站接口,伪造请求。
+
   1. 严格的跨域请求限制
   2. 为cookie设置SameSite, 禁止跨域传递cookie.
   3. SQL注入
   4. DOS
+
+## OSI七层模型
+
+  应用层: 用户与网络的接口
+  表示层: 数据加密, 转换, 压缩
+  会话层: 控制网络连接建立与终止
+  传输层: 控制数据传输的可靠性
+  网络层: 确定目标网络
+  数据链路层: 确定目标主机
+  物理层: 各种物理设备和标准
