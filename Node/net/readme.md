@@ -34,3 +34,38 @@ new connections and emit 'drop' event instead.
     readableAll: false,
     writableAll: false
   }, callback)
+
+## net.createServer(options connectionListener)
+
+  creates a new TCP or IPC server.
+
+```js
+const server = net.createServer(socket => {
+  socket.on('end', () => {
+    console.log('------end-----')
+  })
+  socket.write('Hello World!');
+});
+server.on('listening', () => {
+  console.log('-------- start listening ------')
+});
+server.on('error', (err) => {
+  console.log('-------error---------', err)
+  if (err.code === 'EADDRINUSE') {
+    console.log('端口被占用')
+  }
+});
+server.on('connection', () => {
+  console.log('------- connection ---------')
+});
+server.on('close', () => {
+  console.log('-------- close -------')
+})
+server.listen(8080, () => {
+  console.log('server is listening');
+})
+```
+
+  net.isIp()
+  net.isIPv4()
+  net.isIPv6()
