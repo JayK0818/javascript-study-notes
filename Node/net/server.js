@@ -10,13 +10,15 @@ const net = require('node:net');
     });
     socket.on('data', (chunk) => {
       console.log('socket-chunk', chunk.toString())
+      // socket.write(Buffer.from('socket/' + chunk.toString()))
     });
     socket.on('error', (err) => {
       console.log('socket-error', err)
     });
     console.log('socket-address:', socket.address())
     // Sends data on the socket. The second parameter specifies the encoding in the case of a string. It defaults to UTF8 encoding.
-    socket.write('Hello World!');
+      socket.write('Hello World!!!')
+      socket.end()
   });
   server.on('listening', () => {
     console.log('-------- start listening ------')

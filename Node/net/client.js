@@ -26,5 +26,27 @@ const net = require('node:net');
   })
   client.on('end', () => {
     console.log('断开与服务器的连接')
+    console.log(client.pending)
+  })
+});
+
+(function () {
+  const client = net.connect({
+    port: 8080
+  });
+  client.on('connect', () => {
+    console.log('client-connect')
+    // TCP粘包
+    client.write('hello')
+    client.write('world')
+    client.write('你好')
+    client.write('世界');
+    client.end() // 结束连接
+  });
+  client.on('data', (chunk) => {
+    console.log('client-data:', chunk.toString())
+  })
+  client.on('end', () => {
+    console.log('client-disconnected')
   })
 })();

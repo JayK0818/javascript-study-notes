@@ -1,6 +1,6 @@
-# MySql
+# 数据库
 
-## 概念
+## MySql
 
 1. 数据库是一些关联表的集合
 2. 列: 一列包含了相同类型的数据
@@ -46,7 +46,7 @@ USE database_name;
 create database database_name;
 
 // 删除数据库
-drop database databas_name;
+drop database database_name;
 
 
 // 创建用户表
@@ -83,3 +83,32 @@ SELECT * FROM users ORDER BY birthdate DESC
 
 SELECT * FROM users LIMIT 10; // limit限制返回的行数
 ```
+
+## MongoDB
+
+  MongoDB是一个文档型数据库, 数据以类似JSON的文档形式存储。
+  MongoDB的设计理念是为了应对大量数据, 高性能和灵活性需求
+
+数据库（Database）：存储数据的容器，类似于关系型数据库中的数据库。
+集合（Collection）：数据库中的一个集合，类似于关系型数据库中的表。
+文档（Document）：集合中的一个数据记录，类似于关系型数据库中的行（row。
+
+  数据库和mongosh安装在 /usr/local 目录下, 安装之后配置环境变量.
+
+```shell
+cd ~/.zshrc
+export PATH='/usr/local/mongodb/bin:$PATH'
+export PATH='/usr/local/mongosh/bin:$PATH'
+
+mongod --version
+```
+
+  MongoDB Shell 是MongoDB提供的官方交互式界面。允许用户与MongoDB数据库进行交互,执行命令和操作数据库。
+
+```shell
+mongosh --version #查看安装版本
+```
+
+[MongoDB下载](https://www.mongodb.com/try/download/community)
+
+[MongoDB-官网](https://www.mongodb.com/zh-cn/docs/manual/)
