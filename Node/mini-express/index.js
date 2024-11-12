@@ -22,18 +22,35 @@ allowMethods.forEach((method) => {
   };
 });
 
+/* Router.prototype.handle = function (req, res) {
+  const url = req.url;
+  const method = (req.method || "get").toLowerCase();
+  const target = this.stack.find(
+    (item) => item.method === method && item.path === url
+  );
+  if (target) {
+    return target.handler(req, res);
+  }
+  return res.end("Not Found");
+}; */
+
+// --------- 支持中间件 -----------
 Router.prototype.handle = function (req, res) {
   const url = req.url;
-  if (url !== "/favicon.ico") {
-    const method = (req.method || "get").toLowerCase();
-    const target = this.stack.find(
-      (item) => item.method === method && item.path === url
-    );
-    if (target) {
-      return target.handler(req, res);
+  const method = (req.method || "get").toLowerCase();
+  let idx = 0;
+  const next = () => {
+    if (idx >= this.stack.length) {
+      return;
     }
-    return res.end("Not Found");
-  }
+    const route = this.stack[idx++];
+    if (route && route.method === method && route.path === url) {
+      route.handler(req, res, next);
+    } else {
+      next();
+    }
+  };
+  next();
 };
 
 allowMethods.forEach((method) => {
@@ -56,7 +73,21 @@ const express = function () {
 
 // ----------------- 使用 ---------------
 const application = express();
+application.get("/", (req, res, next) => {
+  console.log("next-before");
+  res.end("home");
+  next();
+  console.log("next-after");
+});
+
+application.get("/user", (req, res, next) => {
+  console.log("user1");
+  setTimeout(() => {
+    next();
+  }, 1000);
+});
 application.get("/user", (req, res) => {
+  console.log("user2");
   res.end("user page");
 });
 application.get("/about", (req, res) => {
