@@ -44,7 +44,7 @@ Router.prototype.handle = function (req, res) {
       return;
     }
     const route = this.stack[idx++];
-    if (route && route.method === method && route.path === url) {
+    if (route && (route.path === url || url.includes(route.path))) {
       route.handler(req, res, next);
     } else {
       next();
@@ -66,6 +66,16 @@ App.prototype.listen = function (...args) {
   server.listen(...args);
 };
 
+// TODO
+App.prototype.use = function (path, handler) {
+  if (typeof path === "function") {
+    this._router["get"]("/", path);
+  } else {
+    this._router["get"](path, handler);
+  }
+};
+App.prototype.Router = Router;
+
 const express = function () {
   const app = new App();
   return app;
@@ -73,18 +83,28 @@ const express = function () {
 
 // ----------------- 使用 ---------------
 const application = express();
-application.get("/", (req, res, next) => {
+
+application.use((req, res, next) => {
+  console.log("全局中间件");
+  next();
+  console.log("全局中间件after");
+});
+
+application.use((req, res, next) => {
+  console.log("before");
+  next();
+  console.log("after");
+});
+/* application.get("/", (req, res, next) => {
   console.log("next-before");
   res.end("home");
   next();
   console.log("next-after");
-});
+}); */
 
 application.get("/user", (req, res, next) => {
   console.log("user1");
-  setTimeout(() => {
-    next();
-  }, 1000);
+  next();
 });
 application.get("/user", (req, res) => {
   console.log("user2");
